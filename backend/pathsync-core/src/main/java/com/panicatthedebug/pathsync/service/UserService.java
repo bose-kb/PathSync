@@ -6,7 +6,7 @@ import com.panicatthedebug.pathsync.exception.UserNotFoundException;
 import com.panicatthedebug.pathsync.exception.ValidationException;
 import com.panicatthedebug.pathsync.model.User;
 import com.panicatthedebug.pathsync.repo.UserRepo;
-import com.panicatthedebug.pathsync.security.JWTService;
+import com.panicatthedebug.pathsync.security.JwtService;
 import com.panicatthedebug.pathsync.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,12 +22,12 @@ public class UserService {
     static final String MESSAGE = "message";
 
     private final UserRepo userRepo;
-    private final JWTService jwtService;
+    private final JwtService jwtService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final AuthenticationManager authManager;
 
     @Autowired
-    public UserService(UserRepo userRepo, JWTService jwtService, BCryptPasswordEncoder passwordEncoder, AuthenticationManager authManager) {
+    public UserService(UserRepo userRepo, JwtService jwtService, BCryptPasswordEncoder passwordEncoder, AuthenticationManager authManager) {
         this.userRepo = userRepo;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
