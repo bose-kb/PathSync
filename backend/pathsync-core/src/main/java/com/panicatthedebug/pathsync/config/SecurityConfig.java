@@ -32,10 +32,10 @@ public class SecurityConfig {
     private final JwtFilter jwtFilter;
 
     @Autowired
-    public SecurityConfig(UserDetailsService userDetailsService, BCryptPasswordEncoder passwordEncoder) {
+    public SecurityConfig(UserDetailsService userDetailsService, BCryptPasswordEncoder passwordEncoder, JwtFilter jwtFilter) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
-        this.jwtFilter = new JwtFilter();
+        this.jwtFilter = jwtFilter;
     }
 
     @Bean
