@@ -1,4 +1,4 @@
-package com.panicatthedebug.pathsync.questions;
+package com.panicatthedebug.pathsync.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
