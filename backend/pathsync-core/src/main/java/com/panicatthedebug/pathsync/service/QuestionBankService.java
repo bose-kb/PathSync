@@ -1,5 +1,7 @@
-package com.panicatthedebug.pathsync.questions;
+package com.panicatthedebug.pathsync.service;
 
+import com.panicatthedebug.pathsync.model.QuestionBankItem;
+import com.panicatthedebug.pathsync.repo.QuestionBankRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
