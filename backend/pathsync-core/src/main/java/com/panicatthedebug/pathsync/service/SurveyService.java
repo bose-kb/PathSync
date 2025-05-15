@@ -71,10 +71,9 @@ public class SurveyService {
         q1.setText("How comfortable are you with Java syntax and core concepts?");
         q1.setSkillCategory("Java");
         q1.setOptions(List.of(
-                "I'm new to Java or have limited knowledge",
-                "I understand basic syntax and can write simple programs",
-                "I'm comfortable with most Java features including OOP concepts",
-                "I have deep knowledge of Java including advanced features"
+                "I'm new to Java or have limited knowledge", // BEGINNER
+                "I understand basic syntax and can write programs with OOP concepts", // INTERMEDIATE
+                "I have deep knowledge of Java including advanced features" // ADVANCED
         ));
         questions.add(q1);
 
@@ -84,10 +83,9 @@ public class SurveyService {
         q2.setText("Have you worked with Spring Boot before?");
         q2.setSkillCategory("Spring Boot");
         q2.setOptions(List.of(
-                "Never used it",
-                "I've used it in tutorials or small projects",
-                "I've built multiple applications with Spring Boot",
-                "I've built complex enterprise applications with Spring Boot"
+                "Never used it or only in basic tutorials", // BEGINNER
+                "I've built applications with Spring Boot", // INTERMEDIATE
+                "I've built complex enterprise applications with Spring Boot" // ADVANCED
         ));
         questions.add(q2);
 
@@ -97,10 +95,9 @@ public class SurveyService {
         q3.setText("How experienced are you with designing and implementing RESTful APIs?");
         q3.setSkillCategory("REST APIs");
         q3.setOptions(List.of(
-                "No experience",
-                "I understand the concepts but have limited practical experience",
-                "I've designed and implemented several RESTful APIs",
-                "I've designed complex API architectures following best practices"
+                "No experience or limited conceptual understanding", // BEGINNER
+                "I've designed and implemented several RESTful APIs", // INTERMEDIATE
+                "I've designed complex API architectures following best practices" // ADVANCED
         ));
         questions.add(q3);
 
@@ -110,10 +107,9 @@ public class SurveyService {
         q4.setText("How would you rate your SQL knowledge?");
         q4.setSkillCategory("SQL");
         q4.setOptions(List.of(
-                "I know little to no SQL",
-                "I can write basic queries (SELECT, INSERT, UPDATE, DELETE)",
-                "I'm comfortable with joins, subqueries, and database design",
-                "I have advanced SQL knowledge including optimization and performance tuning"
+                "I know basic queries (SELECT, INSERT, UPDATE, DELETE)", // BEGINNER
+                "I'm comfortable with joins, subqueries, and database design", // INTERMEDIATE
+                "I have advanced SQL knowledge including optimization and performance tuning" // ADVANCED
         ));
         questions.add(q4);
 
@@ -123,10 +119,9 @@ public class SurveyService {
         q5.setText("How familiar are you with microservices architecture?");
         q5.setSkillCategory("Microservices");
         q5.setOptions(List.of(
-                "Not familiar at all",
-                "I understand the concept but haven't implemented it",
-                "I've worked on microservices-based applications",
-                "I've designed and implemented complex microservices architectures"
+                "Limited understanding of the concept", // BEGINNER
+                "I've worked on microservices-based applications", // INTERMEDIATE
+                "I've designed and implemented complex microservices architectures" // ADVANCED
         ));
         questions.add(q5);
 
@@ -142,10 +137,9 @@ public class SurveyService {
         q1.setText("How comfortable are you with JavaScript syntax and core concepts?");
         q1.setSkillCategory("JavaScript");
         q1.setOptions(List.of(
-                "I'm new to JavaScript or have limited knowledge",
-                "I understand basic syntax and can write simple scripts",
-                "I'm comfortable with most JS features including ES6+",
-                "I have deep knowledge of JavaScript including advanced patterns"
+                "I'm new to JavaScript or have limited knowledge", // BEGINNER
+                "I'm comfortable with most JS features including ES6+", // INTERMEDIATE
+                "I have deep knowledge of JavaScript including advanced patterns" // ADVANCED
         ));
         questions.add(q1);
 
@@ -155,10 +149,9 @@ public class SurveyService {
         q2.setText("Have you worked with React before?");
         q2.setSkillCategory("React");
         q2.setOptions(List.of(
-                "Never used it",
-                "I've used it in tutorials or small projects",
-                "I've built multiple applications with React",
-                "I've built complex applications with advanced React patterns"
+                "Never used it or only in basic tutorials", // BEGINNER
+                "I've built multiple applications with React", // INTERMEDIATE
+                "I've built complex applications with advanced React patterns" // ADVANCED
         ));
         questions.add(q2);
 
@@ -168,10 +161,9 @@ public class SurveyService {
         q3.setText("How experienced are you with Node.js?");
         q3.setSkillCategory("Node.js");
         q3.setOptions(List.of(
-                "No experience",
-                "I've used it for simple scripts or basic servers",
-                "I've built several applications with Node.js",
-                "I've built complex backend systems with Node.js"
+                "No experience or only simple scripts", // BEGINNER
+                "I've built several applications with Node.js", // INTERMEDIATE
+                "I've built complex backend systems with Node.js" // ADVANCED
         ));
         questions.add(q3);
 
@@ -181,10 +173,9 @@ public class SurveyService {
         q4.setText("How would you rate your HTML/CSS knowledge?");
         q4.setSkillCategory("HTML/CSS");
         q4.setOptions(List.of(
-                "I know basic HTML tags and CSS properties",
-                "I can create simple responsive layouts",
-                "I'm comfortable with advanced CSS including flexbox and grid",
-                "I have expert-level knowledge of HTML5 and CSS3 features"
+                "I can create basic web pages with simple styling", // BEGINNER
+                "I'm comfortable with responsive layouts and modern CSS features", // INTERMEDIATE
+                "I have expert-level knowledge of HTML5 and CSS3 including animations and optimization" // ADVANCED
         ));
         questions.add(q4);
 
@@ -194,10 +185,9 @@ public class SurveyService {
         q5.setText("How familiar are you with state management in React (Redux, Context API, etc.)?");
         q5.setSkillCategory("State Management");
         q5.setOptions(List.of(
-                "Not familiar at all",
-                "I understand the concepts but have limited experience",
-                "I've used Redux or Context API in several projects",
-                "I've implemented complex state management solutions"
+                "Limited understanding of state management concepts", // BEGINNER
+                "I've used Redux or Context API in several projects", // INTERMEDIATE
+                "I've implemented complex state management solutions" // ADVANCED
         ));
         questions.add(q5);
 
@@ -213,10 +203,9 @@ public class SurveyService {
         q1.setText("How comfortable are you with Java syntax and core concepts?");
         q1.setSkillCategory("Java");
         q1.setOptions(List.of(
-                "I'm new to Java or have limited knowledge",
-                "I understand basic syntax and can write simple programs",
-                "I'm comfortable with most Java features including OOP concepts",
-                "I have deep knowledge of Java including advanced features"
+                "I'm new to Java or have limited knowledge", // BEGINNER
+                "I'm comfortable with most Java features including OOP concepts", // INTERMEDIATE
+                "I have deep knowledge of Java including advanced features" // ADVANCED
         ));
         questions.add(q1);
 
@@ -226,10 +215,9 @@ public class SurveyService {
         q2.setText("Have you worked with Selenium before?");
         q2.setSkillCategory("Selenium");
         q2.setOptions(List.of(
-                "Never used it",
-                "I've used it in tutorials or simple test cases",
-                "I've created test suites with Selenium",
-                "I've built comprehensive test frameworks using Selenium"
+                "Never used it or only in simple test cases", // BEGINNER
+                "I've created test suites with Selenium", // INTERMEDIATE
+                "I've built comprehensive test frameworks using Selenium" // ADVANCED
         ));
         questions.add(q2);
 
@@ -239,10 +227,9 @@ public class SurveyService {
         q3.setText("How experienced are you with Behavior-Driven Development (BDD)?");
         q3.setSkillCategory("BDD");
         q3.setOptions(List.of(
-                "No experience",
-                "I understand the concepts but have limited practical experience",
-                "I've used BDD frameworks like Cucumber in several projects",
-                "I've implemented comprehensive BDD testing strategies"
+                "Limited conceptual understanding", // BEGINNER
+                "I've used BDD frameworks like Cucumber in several projects", // INTERMEDIATE
+                "I've implemented comprehensive BDD testing strategies" // ADVANCED
         ));
         questions.add(q3);
 
@@ -252,10 +239,9 @@ public class SurveyService {
         q4.setText("How would you rate your knowledge of JUnit?");
         q4.setSkillCategory("JUnit");
         q4.setOptions(List.of(
-                "I know little to nothing about JUnit",
-                "I can write basic unit tests with JUnit",
-                "I'm comfortable with advanced JUnit features and mocking",
-                "I have expert-level knowledge of JUnit and testing best practices"
+                "I can write basic unit tests with JUnit", // BEGINNER
+                "I'm comfortable with advanced JUnit features and mocking", // INTERMEDIATE
+                "I have expert-level knowledge of JUnit and testing best practices" // ADVANCED
         ));
         questions.add(q4);
 
@@ -265,10 +251,9 @@ public class SurveyService {
         q5.setText("How familiar are you with test planning and strategy?");
         q5.setSkillCategory("Test Planning");
         q5.setOptions(List.of(
-                "Not familiar at all",
-                "I understand basic test planning concepts",
-                "I've created test plans for several projects",
-                "I've designed comprehensive test strategies for complex systems"
+                "I understand basic test planning concepts", // BEGINNER
+                "I've created test plans for several projects", // INTERMEDIATE
+                "I've designed comprehensive test strategies for complex systems" // ADVANCED
         ));
         questions.add(q5);
 
@@ -311,7 +296,7 @@ public class SurveyService {
             String skillLevel;
             if (responseIndex == 0) {
                 skillLevel = "BEGINNER";
-            } else if (responseIndex == 1 || responseIndex == 2) {
+            } else if (responseIndex == 1) {
                 skillLevel = "INTERMEDIATE";
             } else {
                 skillLevel = "ADVANCED";
