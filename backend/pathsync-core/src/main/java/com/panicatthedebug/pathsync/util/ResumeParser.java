@@ -1,19 +1,24 @@
 package com.panicatthedebug.pathsync.util;
 
 import com.panicatthedebug.pathsync.model.ResumeDetails;
+import com.panicatthedebug.pathsync.model.SkillMapping;
+import com.panicatthedebug.pathsync.repo.SkillMappingRepo;
 import org.apache.tika.Tika;
 import org.apache.tika.exception.TikaException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
 public class ResumeParser {
+
+    @Autowired
+     private SkillMappingRepo skillMappingRepo;
 
     public ResumeDetails parseResume(MultipartFile file) throws IOException, TikaException {
 
@@ -90,24 +95,23 @@ public class ResumeParser {
     }
 
     private List<String> extractSkills(String content) {
-        List<String> skills = new ArrayList<>();
+        Set<String> skills = new HashSet<>();
+        String lowerContent = content.toLowerCase();
 
-        String[] skillKeywords = {
-                "Java", "Spring", "Spring Boot", "MongoDB", "SQL", "MySQL", "PostgreSQL",
-                "JavaScript", "TypeScript", "React", "Angular", "Vue", "Node.js",
-                "Docker", "Kubernetes", "AWS", "Azure", "GCP", "DevOps", "CI/CD",
-                "Git", "Jenkins", "Microservices", "REST", "GraphQL", "Agile", "Scrum",
-                "Python", "C#", ".NET", "PHP", "Ruby", "Go", "Rust", "C++", "C",
-                "HTML", "CSS", "SASS", "LESS", "Bootstrap", "Tailwind",
-                "Redis", "Kafka", "RabbitMQ", "Elasticsearch", "Hadoop", "Spark"
-        };
+        List<SkillMapping> allMappings = skillMappingRepo.findAll();
 
-        for (String skill : skillKeywords) {
-            if (content.toLowerCase().contains(skill.toLowerCase())) {
-                skills.add(skill);
+        for (SkillMapping mapping : allMappings) {
+            String resumeSkillText = mapping.getResumeText().toLowerCase();
+
+            Pattern pattern = Pattern.compile("\\b" + Pattern.quote(resumeSkillText) + "\\b",
+                    Pattern.CASE_INSENSITIVE);
+            Matcher matcher = pattern.matcher(content);
+
+            if (matcher.find()) {
+                skills.add(mapping.getStandardizedSkill());
             }
         }
 
-        return skills;
+        return new ArrayList<>(skills);
     }
 }
