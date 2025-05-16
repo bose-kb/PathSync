@@ -34,7 +34,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({
             UserAlreadyExistsException.class,
             ValidationException.class,
-            SurveyNotCompleteException.class
+            SurveyNotCompleteException.class,
+            LearnPathAlreadyExistsException.class
     })
     public ResponseEntity<Object> handleBadRequest(Exception e, WebRequest webRequest) {
         return handleExceptionInternal(e, Map.of(MESSAGE, e.getMessage()),
