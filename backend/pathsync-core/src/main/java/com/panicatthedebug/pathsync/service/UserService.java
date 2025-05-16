@@ -5,7 +5,7 @@ import com.panicatthedebug.pathsync.exception.UserAlreadyExistsException;
 import com.panicatthedebug.pathsync.exception.UserNotFoundException;
 import com.panicatthedebug.pathsync.exception.ValidationException;
 import com.panicatthedebug.pathsync.model.User;
-import com.panicatthedebug.pathsync.repo.UserRepo;
+import com.panicatthedebug.pathsync.repository.UserRepository;
 import com.panicatthedebug.pathsync.security.JwtService;
 import com.panicatthedebug.pathsync.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +21,13 @@ import java.util.Map;
 public class UserService {
     static final String MESSAGE = "message";
 
-    private final UserRepo userRepo;
+    private final UserRepository userRepo;
     private final JwtService jwtService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final AuthenticationManager authManager;
 
     @Autowired
-    public UserService(UserRepo userRepo, JwtService jwtService, BCryptPasswordEncoder passwordEncoder, AuthenticationManager authManager) {
+    public UserService(UserRepository userRepo, JwtService jwtService, BCryptPasswordEncoder passwordEncoder, AuthenticationManager authManager) {
         this.userRepo = userRepo;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
@@ -65,5 +65,49 @@ public class UserService {
                 "username", user.getFirstName() + " " + user.getLastName(),
                 "role", user.getRole()
         );
+    }
+
+    public void setTargetLanguage(String email, String targetLanguage) {
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        user.setTargetLanguage(targetLanguage);
+        userRepo.save(user);
+    }
+
+    public void setTargetRole(String email, String targetRole) {
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        user.setTargetRole(targetRole);
+        userRepo.save(user);
+    }
+
+    public void setAssessmentCompleted(String email, String finalSkillLevel) {
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        user.setFinalSkillLevel(finalSkillLevel);
+        user.setAssessmentCompleted(true);
+        userRepo.save(user);
+    }
+
+    public boolean hasAssessmentCompleted(String email) {
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        return user.isAssessmentCompleted();
+    }
+
+    public String getUserSkillLevel(String email) {
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        return user.getFinalSkillLevel();
     }
 }

@@ -1,4 +1,4 @@
-package com.panicatthedebug.pathsync.repo;
+package com.panicatthedebug.pathsync.repository;
 
 import com.panicatthedebug.pathsync.model.QuestionBankItem;
 import org.springframework.data.mongodb.repository.MongoRepository;

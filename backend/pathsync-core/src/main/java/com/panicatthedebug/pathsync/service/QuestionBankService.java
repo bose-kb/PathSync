@@ -2,7 +2,7 @@ package com.panicatthedebug.pathsync.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.panicatthedebug.pathsync.model.QuestionBankItem;
-import com.panicatthedebug.pathsync.repo.QuestionBankRepository;
+import com.panicatthedebug.pathsync.repository.QuestionBankRepository;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
