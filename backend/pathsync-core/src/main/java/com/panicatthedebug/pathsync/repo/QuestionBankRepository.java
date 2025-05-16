@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface QuestionBankRepository extends MongoRepository<QuestionBankItem, String> {
 
-    @Query("{ 'targetLanguage': ?0, 'difficultyLevel': ?1, 'targetRole': ?2 }")
-    List<QuestionBankItem> findByCriteria(String targetLanguage, String difficultyLevel, String targetRole);
+    @Query("{ 'targetLanguage': ?0, 'difficultyLevel': ?1, 'targetRole': ?2, 'topic': ?3 }")
+    List<QuestionBankItem> findByCriteria(String targetLanguage, String difficultyLevel, String targetRole, String topic);
 }

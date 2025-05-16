@@ -25,8 +25,8 @@ public class QuestionBankService {
     @Autowired
     private ChatClient openAiChatClient;
 
-    public List<QuestionBankItem> retrieveQuestions(String targetLanguage, String difficultyLevel, String targetRole) {
-        List<QuestionBankItem> allQuestions = questionBankRepository.findByCriteria(targetLanguage, difficultyLevel, targetRole);
+    public List<QuestionBankItem> retrieveQuestions(String targetLanguage, String difficultyLevel, String targetRole, String topic) {
+        List<QuestionBankItem> allQuestions = questionBankRepository.findByCriteria(targetLanguage, difficultyLevel, targetRole, topic);
 
         // Select questions based on least usage count and last used date
         List<QuestionBankItem> selectedQuestions = pickQuestions(allQuestions);
