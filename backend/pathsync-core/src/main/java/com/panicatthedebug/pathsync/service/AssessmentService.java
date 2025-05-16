@@ -1,0 +1,351 @@
+package com.panicatthedebug.pathsync.service;
+
+import com.panicatthedebug.pathsync.dto.AssessmentSummaryDTO;
+import com.panicatthedebug.pathsync.exception.AccessDeniedException;
+import com.panicatthedebug.pathsync.exception.InvalidOperationException;
+import com.panicatthedebug.pathsync.exception.ResourceNotFoundException;
+import com.panicatthedebug.pathsync.model.*;
+import org.springframework.stereotype.Service;
+
+import com.panicatthedebug.pathsync.repository.*;
+
+import java.util.*;
+
+@Service
+public class AssessmentService {
+
+    private final QuestionBankRepository questionBankRepository;
+    private final AssessmentRepository assessmentRepository;
+    private final SurveyResponseRepository surveyResponseRepository;
+    private final UserService userService;
+    private final QuestionBankService questionBankService;
+
+//    @Value("${assessment.question-count:15}")
+//    private int questionCount;
+//
+//    @Value("${assessment.duration-minutes:15}")
+//    private int durationMinutes;
+
+    public AssessmentService(
+            QuestionBankRepository questionBankRepository,
+            AssessmentRepository assessmentRepository,
+            SurveyResponseRepository surveyResponseRepository,
+            UserService userService,
+            QuestionBankService questionBankService) {
+        this.questionBankRepository = questionBankRepository;
+        this.assessmentRepository = assessmentRepository;
+        this.surveyResponseRepository = surveyResponseRepository;
+        this.userService = userService;
+        this.questionBankService = questionBankService;
+    }
+
+    /**
+     * Generate an assessment based on survey results if the user is intermediate or advanced
+     * and hasn't completed an assessment yet
+     */
+    public Assessment generateAssessmentFromSurvey(String userId) {
+        // Check if user has already completed an assessment
+        if (userService.hasAssessmentCompleted(userId)) {
+            throw new InvalidOperationException("You have already completed your assessment");
+        }
+
+
+        // Get the user's survey response
+        SurveyResponse surveyResponse = surveyResponseRepository.findByUserEmail(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Survey not found for user"));
+
+        // Check if user already has an incomplete assessment
+        Optional<Assessment> existingAssessment = assessmentRepository.findByUserEmailAndCompletedFalse(userId);
+        if (existingAssessment.isPresent()) {
+            return existingAssessment.get();
+        }
+
+        // Map survey role to question bank role format
+        String targetRole = surveyResponse.getTargetRole();
+
+        // Create a new assessment
+        Assessment assessment = new Assessment();
+        assessment.setUserEmail(userId);
+        assessment.setTargetRole(targetRole);
+        assessment.setPreferredLanguage(surveyResponse.getPreferredLanguage());
+        assessment.setSkillLevel(surveyResponse.getOverallSkillLevel());
+        assessment.setCreatedAt(new Date());
+        assessment.setDurationMinutes(25);
+        assessment.setCompleted(false);
+
+        // Select questions from the question bank based on the survey results
+        List<Question> selectedQuestions = selectQuestionsFromBank(
+                targetRole,
+                surveyResponse.getPreferredLanguage(),
+                surveyResponse.getSkillAssessments()
+        );
+
+        assessment.setQuestions(selectedQuestions);
+
+        // Save and return the assessment
+        return assessmentRepository.save(assessment);
+    }
+
+    /**
+     * Select questions from the question bank based on user's topic-specific skill levels
+     * Each topic will have exactly 5 questions
+     */
+    private List<Question> selectQuestionsFromBank(
+            String targetRole,
+            String language,
+            Map<String, String> skillAssessments) {
+
+
+        List<Question> selectedQuestions = new ArrayList<>();
+
+        // For each topic in skill assessments, select 5 questions with the correct difficulty level
+        for (Map.Entry<String, String> entry : skillAssessments.entrySet()) {
+            String skillCategory = entry.getKey();
+            String topicDifficultyLevel = entry.getValue();
+
+            System.out.println(skillCategory);
+            // Map skill category to topic
+            String topic = mapSkillCategoryToTopic(skillCategory);
+            System.out.println(topic);
+
+            // Find questions in the bank for this topic with the appropriate difficulty level
+            List<QuestionBankItem> bankItems = questionBankService.retrieveQuestions(
+                    language,
+                    topicDifficultyLevel,
+                    targetRole,
+                    topic
+            );
+
+            // Convert bank items to assessment questions
+            for (QuestionBankItem item : bankItems) {
+                Question question = convertBankItemToQuestion(item);
+                selectedQuestions.add(question);
+            }
+        }
+
+        // Shuffle the questions for randomized order
+        Collections.shuffle(selectedQuestions);
+
+        return selectedQuestions;
+    }
+
+    /**
+     * Map a single skill category to a topic
+     */
+    private String mapSkillCategoryToTopic(String skillCategory) {
+        Map<String, String> mappings = Map.ofEntries(
+                Map.entry("bj1","Java"),
+                Map.entry("bj2", "Spring Boot"),
+                Map.entry("bj3","REST APIs"),
+                Map.entry("bj4","SQL"),
+                Map.entry("bj5","Microservices"),
+                Map.entry("fj1","JavaScript"),
+                Map.entry("fj2","React"),
+                Map.entry("fj3","Node.js"),
+                Map.entry("fj4","HTML/CSS"),
+                Map.entry("fj5","State Management"),
+                Map.entry("tj1", "Java"),
+                Map.entry("tj2","Selenium"),
+                Map.entry("tj3","BDD"),
+                Map.entry("tj4","JUnit"),
+                Map.entry("tj5","Test Planning")
+
+        );
+
+        return mappings.getOrDefault(skillCategory, skillCategory);
+    }
+
+    /**
+     * Convert a question bank item to an assessment question
+     */
+    private Question convertBankItemToQuestion(QuestionBankItem item) {
+        Question question = new Question();
+        question.setId(item.getId());
+        question.setText(item.getText());
+        question.setOptions(item.getOptions());
+        question.setCorrectOptionIndex(item.getCorrectOptionIndex());
+        question.setExplanation(item.getExplanation());
+        question.setSkillCategory(item.getTopic()); // Use topic as skill category
+        return question;
+    }
+
+    /**
+     * Start an assessment
+     */
+    public Assessment startAssessment(String assessmentId, String userId) {
+        Assessment assessment = assessmentRepository.findById(assessmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Assessment not found"));
+
+        // Verify the assessment belongs to the user
+        if (!assessment.getUserEmail().equals(userId)) {
+            throw new AccessDeniedException("You don't have permission to access this assessment");
+        }
+
+        // Check if assessment is already completed
+        if (assessment.isCompleted()) {
+            throw new InvalidOperationException("This assessment is already completed");
+        }
+
+        // Check if assessment is already started
+        if (assessment.getStartedAt() != null) {
+            // Return the existing assessment with time remaining
+            return assessment;
+        }
+
+        // Start the assessment
+        assessment.setStartedAt(new Date());
+        return assessmentRepository.save(assessment);
+    }
+
+    /**
+     * Submit an answer for a question in the assessment
+     */
+    public AssessmentSummaryDTO submitAnswer(String assessmentId, String questionId, Integer selectedOption, String userId) {
+        Assessment assessment = assessmentRepository.findById(assessmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Assessment not found"));
+
+        // Verify the assessment belongs to the user
+        if (!assessment.getUserEmail().equals(userId)) {
+            throw new AccessDeniedException("You don't have permission to access this assessment");
+        }
+
+        // Check if assessment is already completed
+        if (assessment.isCompleted()) {
+            throw new InvalidOperationException("This assessment is already completed");
+        }
+
+        // Check if assessment has started
+        if (assessment.getStartedAt() == null) {
+            throw new InvalidOperationException("Assessment has not been started");
+        }
+
+        // Check if assessment time has expired
+        Date now = new Date();
+        Date expiryTime = new Date(assessment.getStartedAt().getTime() +
+                (assessment.getDurationMinutes() * 60 * 1000L));
+        if (now.after(expiryTime)) {
+            // Auto-complete the assessment if time expired
+            return completeAssessment(assessmentId, userId);
+        }
+
+        // Find the question and update the selected option
+        boolean questionFound = false;
+        for (Question question : assessment.getQuestions()) {
+            if (question.getId().equals(questionId)) {
+                question.setUserSelectedOption(selectedOption);
+                questionFound = true;
+                break;
+            }
+        }
+
+        if (!questionFound) {
+            throw new ResourceNotFoundException("Question not found in assessment");
+        }
+
+        // Save and return the updated assessment
+        assessmentRepository.save(assessment);
+
+        return new AssessmentSummaryDTO(generateQuestionResultMap(assessment.getQuestions()));
+    }
+
+    /**
+     * Complete an assessment and calculate the score
+     * Also update the user's final skill level based on assessment results
+     */
+    public AssessmentSummaryDTO completeAssessment(String assessmentId, String userId) {
+        Assessment assessment = assessmentRepository.findById(assessmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Assessment not found"));
+
+        // Verify the assessment belongs to the user
+        if (!assessment.getUserEmail().equals(userId)) {
+            throw new AccessDeniedException("You don't have permission to access this assessment");
+        }
+
+        // Check if assessment is already completed
+        if (assessment.isCompleted()) {
+            return new AssessmentSummaryDTO(generateQuestionResultMap(assessment.getQuestions()));
+        }
+
+        // Check if assessment has started
+        if (assessment.getStartedAt() == null) {
+            throw new InvalidOperationException("Assessment has not been started");
+        }
+
+        // Mark as completed
+        assessment.setCompleted(true);
+        assessment.setCompletedAt(new Date());
+
+        // Calculate score
+        int correctAnswers = 0;
+        for (Question question : assessment.getQuestions()) {
+            if (question.getUserSelectedOption() != null &&
+                    question.getUserSelectedOption() == question.getCorrectOptionIndex()) {
+                correctAnswers++;
+            }
+        }
+
+        int totalQuestions = assessment.getQuestions().size();
+        int score = totalQuestions > 0 ? (correctAnswers * 100) / totalQuestions : 0;
+        assessment.setScore(score);
+
+        // Determine final skill level based on assessment score
+        String finalSkillLevel = determineFinalSkillLevel(score, assessment.getSkillLevel());
+
+        // Update user's assessment status and final skill level
+        userService.setAssessmentCompleted(userId, finalSkillLevel);
+
+        // Save and return the updated assessment
+        assessmentRepository.save(assessment);
+        return new AssessmentSummaryDTO(generateQuestionResultMap(assessment.getQuestions()));
+    }
+
+    /**
+     * Determine the final skill level based on assessment score and initial survey level
+     */
+    private String determineFinalSkillLevel(int score, String surveySkillLevel) {
+        if (score < 40) {
+            return "BEGINNER";
+        } else if (score < 70) {
+            return "INTERMEDIATE";
+        } else {
+            return "ADVANCED";
+        }
+    }
+
+    /**
+     * Get time remaining for an assessment in seconds
+     */
+    public long getTimeRemainingSeconds(Assessment assessment) {
+        if (assessment.getStartedAt() == null || assessment.isCompleted()) {
+            return 0;
+        }
+
+        Date now = new Date();
+        Date expiryTime = new Date(assessment.getStartedAt().getTime() +
+                (assessment.getDurationMinutes() * 60 * 1000L));
+
+        long remainingMillis = expiryTime.getTime() - now.getTime();
+        return Math.max(0, remainingMillis / 1000);
+    }
+
+    /**
+     * Get a map of question results (CORRECT/INCORRECT) for a completed assessment
+     */
+    public Map<String, String> generateQuestionResultMap(List<Question> questions) {
+        Map<String, String> resultMap = new HashMap<>();
+
+        for (Question question : questions) {
+            String result = "INCORRECT";
+
+            // If the user selected the correct option, mark as correct
+            if (question.getUserSelectedOption() != null &&
+                    question.getUserSelectedOption() == question.getCorrectOptionIndex()) {
+                result = "CORRECT";
+            }
+
+            resultMap.put(question.getId(), result);
+        }
+
+        return resultMap;
+    }
+}
