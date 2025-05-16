@@ -34,7 +34,7 @@ public class UserService {
         this.authManager = authManager;
     }
 
-    public Map<String, String> registerUser(String firstName, String lastName, String email, String password) throws UserAlreadyExistsException {
+    public Map<String, String> registerUser(String firstName, String lastName, String email, String password) throws UserAlreadyExistsException, ValidationException {
         String validationError = ValidationUtil.validateRegistration(firstName, lastName, email, password);
         if (validationError != null) throw new ValidationException(validationError);
 
@@ -45,7 +45,7 @@ public class UserService {
         return Map.of(MESSAGE, "User registered successfully.");
     }
 
-    public Map<String, String> loginUser(String email, String password) throws UnauthorizedException, UserNotFoundException {
+    public Map<String, String> loginUser(String email, String password) throws UnauthorizedException, UserNotFoundException, ValidationException {
         String validationError = ValidationUtil.validateLogin(email, password);
         if (validationError != null) throw new ValidationException(validationError);
 
@@ -75,7 +75,7 @@ public class UserService {
         return user;
     }
 
-    public void setTargetLanguage(String email, String targetLanguage) {
+    public void setTargetLanguage(String email, String targetLanguage) throws UserNotFoundException {
         User user = userRepo.findByEmail(email);
         if (user == null) {
             throw new UserNotFoundException("User not found");
@@ -84,7 +84,7 @@ public class UserService {
         userRepo.save(user);
     }
 
-    public void setTargetRole(String email, String targetRole) {
+    public void setTargetRole(String email, String targetRole) throws UserNotFoundException {
         User user = userRepo.findByEmail(email);
         if (user == null) {
             throw new UserNotFoundException("User not found");
@@ -93,7 +93,7 @@ public class UserService {
         userRepo.save(user);
     }
 
-    public void setAssessmentCompleted(String email, String finalSkillLevel) {
+    public void setAssessmentCompleted(String email, String finalSkillLevel) throws UserNotFoundException {
         User user = userRepo.findByEmail(email);
         if (user == null) {
             throw new UserNotFoundException("User not found");
@@ -103,7 +103,7 @@ public class UserService {
         userRepo.save(user);
     }
 
-    public boolean hasAssessmentCompleted(String email) {
+    public boolean hasAssessmentCompleted(String email) throws UserNotFoundException {
         User user = userRepo.findByEmail(email);
         if (user == null) {
             throw new UserNotFoundException("User not found");
@@ -111,7 +111,7 @@ public class UserService {
         return user.isAssessmentCompleted();
     }
 
-    public String getUserSkillLevel(String email) {
+    public String getUserSkillLevel(String email) throws UserNotFoundException {
         User user = userRepo.findByEmail(email);
         if (user == null) {
             throw new UserNotFoundException("User not found");
