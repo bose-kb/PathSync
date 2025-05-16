@@ -2,7 +2,7 @@ package com.panicatthedebug.pathsync.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.panicatthedebug.pathsync.model.QuestionBankItem;
-import com.panicatthedebug.pathsync.repo.QuestionBankRepository;
+import com.panicatthedebug.pathsync.repository.QuestionBankRepository;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
@@ -11,10 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 public class QuestionBankService {
