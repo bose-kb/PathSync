@@ -12,4 +12,8 @@ public interface QuestionBankRepository extends MongoRepository<QuestionBankItem
 
     @Query("{ 'targetLanguage': ?0, 'difficultyLevel': ?1, 'targetRole': ?2, 'topic': ?3 }")
     List<QuestionBankItem> findByCriteria(String targetLanguage, String difficultyLevel, String targetRole, String topic);
+
+
+    @Query(value = "{ '_id': ?0 }", fields = "{ 'topic': 1 }")
+    QuestionBankItem getTopicById(String id);
 }
