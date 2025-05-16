@@ -48,9 +48,10 @@ public class SurveyController {
 
     @GetMapping("/definitions/{role}/{language}")
     public ResponseEntity<SurveyDefinitionDTO> getSurveyDefinition(
+            Authentication authentication,
             @PathVariable String role,
             @PathVariable String language) throws ResourceNotFoundException {
-        SurveyDefinition definition = surveyService.getSurveyDefinition(role, language);
+        SurveyDefinition definition = surveyService.getSurveyDefinition(authentication.getName(),role, language);
         return ResponseEntity.ok(SurveyDefinitionDTO.from(definition));
     }
 
