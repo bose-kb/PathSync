@@ -1,3 +1,4 @@
+import { Question, SurveyData } from '../types';
 import api from './api'; // Updated Axios instance with JWT handling
 
 // Fetch available roles
