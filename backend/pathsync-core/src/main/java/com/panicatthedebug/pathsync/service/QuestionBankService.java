@@ -1,11 +1,14 @@
 package com.panicatthedebug.pathsync.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.panicatthedebug.pathsync.model.QuestionBankItem;
 import com.panicatthedebug.pathsync.repo.QuestionBankRepository;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -26,9 +29,7 @@ public class QuestionBankService {
         List<QuestionBankItem> allQuestions = questionBankRepository.findByCriteria(targetLanguage, difficultyLevel, targetRole);
 
         // Select questions based on least usage count and last used date
-        List<QuestionBankItem> selectedQuestions = allQuestions.stream()
-                .sorted(Comparator.comparingInt(QuestionBankItem::getUsageCount))
-                .limit(15).collect(Collectors.toList());
+        List<QuestionBankItem> selectedQuestions = pickQuestions(allQuestions);
 
         for (QuestionBankItem question : selectedQuestions) {
             question.setUsageCount(question.getUsageCount() + 1);
@@ -60,5 +61,26 @@ public class QuestionBankService {
         }
 
         return questions;
+    }
+
+    private List<QuestionBankItem> pickQuestions(List<QuestionBankItem> questions) {
+        ObjectMapper objectMapper =  new ObjectMapper();
+        String questionsJson;
+        try {
+            questionsJson = objectMapper.writeValueAsString(questions);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to serialize questions", e);
+        }
+
+        String systemMessage = """
+            You are a helpful assistant.
+            You will receive a list of questions in JSON format.
+            Randomly pick any 5 questions from the list and return them as a JSON array in the **same format**.
+        """;
+
+        String userMessage = "Here is the list:\n" + questionsJson;
+
+        Prompt prompt = new Prompt(new SystemMessage(systemMessage), new UserMessage(userMessage));
+        return openAiChatClient.prompt(prompt).call().entity(new ParameterizedTypeReference<>() {});
     }
 }
