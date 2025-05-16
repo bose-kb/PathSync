@@ -1,6 +1,6 @@
 package com.panicatthedebug.pathsync.service;
 
-import com.panicatthedebug.pathsync.dto.AssessmentSummaryDTO;
+import com.panicatthedebug.pathsync.dto.AssessmentDTO;
 import com.panicatthedebug.pathsync.exception.AccessDeniedException;
 import com.panicatthedebug.pathsync.exception.InvalidOperationException;
 import com.panicatthedebug.pathsync.exception.ResourceNotFoundException;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.panicatthedebug.pathsync.repository.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class AssessmentService {
@@ -186,61 +187,10 @@ public class AssessmentService {
     }
 
     /**
-     * Submit an answer for a question in the assessment
-     */
-    public AssessmentSummaryDTO submitAnswer(String assessmentId, String questionId, Integer selectedOption, String userId) {
-        Assessment assessment = assessmentRepository.findById(assessmentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Assessment not found"));
-
-        // Verify the assessment belongs to the user
-        if (!assessment.getUserEmail().equals(userId)) {
-            throw new AccessDeniedException("You don't have permission to access this assessment");
-        }
-
-        // Check if assessment is already completed
-        if (assessment.isCompleted()) {
-            throw new InvalidOperationException("This assessment is already completed");
-        }
-
-        // Check if assessment has started
-        if (assessment.getStartedAt() == null) {
-            throw new InvalidOperationException("Assessment has not been started");
-        }
-
-        // Check if assessment time has expired
-        Date now = new Date();
-        Date expiryTime = new Date(assessment.getStartedAt().getTime() +
-                (assessment.getDurationMinutes() * 60 * 1000L));
-        if (now.after(expiryTime)) {
-            // Auto-complete the assessment if time expired
-            return completeAssessment(assessmentId, userId);
-        }
-
-        // Find the question and update the selected option
-        boolean questionFound = false;
-        for (Question question : assessment.getQuestions()) {
-            if (question.getId().equals(questionId)) {
-                question.setUserSelectedOption(selectedOption);
-                questionFound = true;
-                break;
-            }
-        }
-
-        if (!questionFound) {
-            throw new ResourceNotFoundException("Question not found in assessment");
-        }
-
-        // Save and return the updated assessment
-        assessmentRepository.save(assessment);
-
-        return new AssessmentSummaryDTO(generateQuestionResultMap(assessment.getQuestions()));
-    }
-
-    /**
      * Complete an assessment and calculate the score
      * Also update the user's final skill level based on assessment results
      */
-    public AssessmentSummaryDTO completeAssessment(String assessmentId, String userId) {
+    public Map<String,Object> completeAssessment(String assessmentId, String userId) {
         Assessment assessment = assessmentRepository.findById(assessmentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Assessment not found"));
 
@@ -251,7 +201,7 @@ public class AssessmentService {
 
         // Check if assessment is already completed
         if (assessment.isCompleted()) {
-            return new AssessmentSummaryDTO(generateQuestionResultMap(assessment.getQuestions()));
+            return Map.of("ResultMap",generateQuestionResultMap(assessment.getQuestions()),"Score",assessment.getScore());
         }
 
         // Check if assessment has started
@@ -284,7 +234,7 @@ public class AssessmentService {
 
         // Save and return the updated assessment
         assessmentRepository.save(assessment);
-        return new AssessmentSummaryDTO(generateQuestionResultMap(assessment.getQuestions()));
+        return Map.of("ResultMap",generateQuestionResultMap(assessment.getQuestions()),"Score",score);
     }
 
     /**
@@ -335,5 +285,17 @@ public class AssessmentService {
         }
 
         return resultMap;
+    }
+
+    public List<AssessmentDTO> getUserAssessments(String userId) {
+        List<Assessment> assessments = assessmentRepository.findByUserEmail(userId);
+
+        // Convert each Assessment to an AssessmentDTO
+        return assessments.stream()
+                .map(assessment -> {
+                    long timeRemaining = getTimeRemainingSeconds(assessment);
+                    return AssessmentDTO.from(assessment, timeRemaining);
+                })
+                .collect(Collectors.toList());
     }
 }
