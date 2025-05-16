@@ -1,6 +1,7 @@
 package com.panicatthedebug.pathsync.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.panicatthedebug.pathsync.exception.LearnPathAlreadyExistsException;
 import com.panicatthedebug.pathsync.exception.LearnPathNotFoundException;
 import com.panicatthedebug.pathsync.exception.SurveyNotCompleteException;
 import com.panicatthedebug.pathsync.model.CustomLearningPath;
@@ -129,11 +130,10 @@ public class LearningPathService {
      * Retrieves a custom learning path for the given user email.
      *
      * @param email              The email of the user.
-     * @param proficiencyByTopic A map of topics and their corresponding proficiency levels.
      * @return The custom learning path for the user.
      * @throws LearnPathNotFoundException If no custom learning path is found for the given email.
      */
-    public CustomLearningPath getCustomLearningPath(String email, Map<String, String> proficiencyByTopic) throws LearnPathNotFoundException {
+    public CustomLearningPath getCustomLearningPath(String email) throws LearnPathNotFoundException {
         return customLearningPathRepository.findById(email)
                 .orElseThrow(() -> new LearnPathNotFoundException("No custom learning path found for email: " + email));
     }
@@ -151,6 +151,31 @@ public class LearningPathService {
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw new RuntimeException("Failed to map JSON to CustomLearningPath", e);
+        }
+    }
+
+    /**
+     * Adds a new standard learning path to the database.
+     *
+     * @param standardLearningPath The standard learning path to be added.
+     * @return A message indicating the success of the operation.
+     */
+    public Map<String, String> addStandardLearningPath(StandardLearningPath standardLearningPath) throws LearnPathAlreadyExistsException {
+        if(standardLearningPathRepository.existsById(standardLearningPath.getId()))
+            throw new LearnPathAlreadyExistsException( "A standard learning path with this id already exists.");
+        StandardLearningPath savedLearningPath = standardLearningPathRepository.save(standardLearningPath);
+        return Map.of("message", "Standard learning path added successfully.");
+    }
+
+    /**
+     * Checks if a custom learning path with the given name already exists.
+     *
+     * @param name The name of the custom learning path.
+     * @throws LearnPathAlreadyExistsException If a custom learning path with the given name already exists.
+     */
+    public void checkCustomLearnPathAlreadyExists(String name) throws LearnPathAlreadyExistsException {
+        if (customLearningPathRepository.existsById(name)) {
+            throw new LearnPathAlreadyExistsException("Custom learn path with this name already exists.");
         }
     }
 }
