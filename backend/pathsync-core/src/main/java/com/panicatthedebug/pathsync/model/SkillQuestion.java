@@ -7,6 +7,7 @@ public class SkillQuestion {
     private String text;
     private String skillCategory;
     private List<String> options;
+    private boolean fromResume;
 
     public SkillQuestion() {}
 
@@ -40,5 +41,13 @@ public class SkillQuestion {
 
     public void setOptions(List<String> options) {
         this.options = options;
+    }
+
+    public boolean isFromResume() {
+        return fromResume;
+    }
+
+    public void setFromResume(boolean fromResume) {
+        this.fromResume = fromResume;
     }
 }
