@@ -2,7 +2,7 @@ package com.panicatthedebug.pathsync.util;
 
 import com.panicatthedebug.pathsync.model.ResumeDetails;
 import com.panicatthedebug.pathsync.model.SkillMapping;
-import com.panicatthedebug.pathsync.repo.SkillMappingRepo;
+import com.panicatthedebug.pathsync.repository.SkillMappingRepo;
 import org.apache.tika.Tika;
 import org.apache.tika.exception.TikaException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class ResumeParser {
     @Autowired
      private SkillMappingRepo skillMappingRepo;
 
-    public ResumeDetails parseResume(MultipartFile file) throws IOException, TikaException {
+    public ResumeDetails parseResume(MultipartFile file, String email) throws IOException, TikaException {
 
         Tika tika = new Tika();
         String content = tika.parseToString(file.getInputStream());
@@ -29,7 +29,6 @@ public class ResumeParser {
         String[] names = extractName(content);
         String firstName = names[0];
         String lastName = names[1];
-        String email = extractEmail(content);
         List<String> skills = extractSkills(content);
 
 
