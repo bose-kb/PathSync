@@ -1,5 +1,6 @@
 package com.panicatthedebug.pathsync.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,6 +10,7 @@ import java.util.Objects;
 
 @Document(collection = "standard_learning_paths")
 public class StandardLearningPath {
+    @JsonProperty("_id")
     @Id
     private String id;
     @NotNull(message = "Target role is required")
