@@ -1,12 +1,8 @@
 package com.panicatthedebug.pathsync.controller;
 
-import com.panicatthedebug.pathsync.exception.LearnPathNotFoundException;
-import com.panicatthedebug.pathsync.exception.QuestionNotFoundException;
-import com.panicatthedebug.pathsync.exception.SurveyNotCompleteException;
-import com.panicatthedebug.pathsync.exception.UserNotFoundException;
+import com.panicatthedebug.pathsync.exception.*;
 import com.panicatthedebug.pathsync.model.CustomLearningPath;
 import com.panicatthedebug.pathsync.model.StandardLearningPath;
-import com.panicatthedebug.pathsync.repository.StandardLearningPathRepository;
 import com.panicatthedebug.pathsync.service.AssessmentService;
 import com.panicatthedebug.pathsync.service.LearningPathService;
 import com.panicatthedebug.pathsync.service.UserService;
@@ -21,13 +17,11 @@ import java.util.Map;
 @RequestMapping("/learn-path")
 public class LearningPathController {
 
-    private final StandardLearningPathRepository standardLearningPathRepository;
     private final LearningPathService learningPathService;
     private final AssessmentService assessmentService;
     private final UserService userService;
 
-    public LearningPathController(StandardLearningPathRepository standardLearningPathRepository, LearningPathService learningPathService, AssessmentService assessmentService, UserService userService) {
-        this.standardLearningPathRepository = standardLearningPathRepository;
+    public LearningPathController(LearningPathService learningPathService, AssessmentService assessmentService, UserService userService) {
         this.learningPathService = learningPathService;
         this.assessmentService = assessmentService;
         this.userService = userService;
@@ -40,23 +34,20 @@ public class LearningPathController {
      * @return A response entity with the saved learning path.
      */
     @PostMapping("/add")
-    public ResponseEntity<StandardLearningPath> addStandardLearningPath(@Valid @RequestBody StandardLearningPath standardLearningPath) {
-        StandardLearningPath savedLearningPath = standardLearningPathRepository.save(standardLearningPath);
-        return ResponseEntity.status(201).body(savedLearningPath);
+    public ResponseEntity<Object> addStandardLearningPath(@Valid @RequestBody StandardLearningPath standardLearningPath) throws LearnPathAlreadyExistsException {
+        return ResponseEntity.status(201).body(learningPathService.addStandardLearningPath(standardLearningPath));
     }
 
     /**
      * Endpoint to retrieve a custom learning path generated for a user.
      *
      * @param authentication The authentication object containing user details.
-     * @param proficiencyByTopic A map of topic IDs and their corresponding proficiency levels.
      * @return A response entity with the fetched custom learning path.
      */
     @GetMapping("/fetch")
-    public ResponseEntity<CustomLearningPath> getCustomLearningPath(Authentication authentication,
-                                                                    @RequestBody Map<String, String> proficiencyByTopic) throws LearnPathNotFoundException {
+    public ResponseEntity<CustomLearningPath> getCustomLearningPath(Authentication authentication) throws LearnPathNotFoundException {
 
-        return ResponseEntity.ok(learningPathService.getCustomLearningPath(authentication.getName(), proficiencyByTopic));
+        return ResponseEntity.ok(learningPathService.getCustomLearningPath(authentication.getName()));
     }
 
     /**
@@ -68,7 +59,8 @@ public class LearningPathController {
      */
     @GetMapping("/create")
     public ResponseEntity<CustomLearningPath> createCustomLearningPath(Authentication authentication,
-                                                                       @RequestBody Map<String, Map<String, String>> questionOutcomes) throws UserNotFoundException, QuestionNotFoundException, SurveyNotCompleteException {
+                                                                       @RequestBody Map<String, Map<String, String>> questionOutcomes) throws UserNotFoundException, QuestionNotFoundException, SurveyNotCompleteException, LearnPathAlreadyExistsException {
+        learningPathService.checkCustomLearnPathAlreadyExists(authentication.getName());
         Map<String, String> proficiencyByTopic = assessmentService.getProficiencyByTopic(questionOutcomes);
         return ResponseEntity.ok(learningPathService.createCustomLearningPath(userService
                         .getUserByEmail(authentication.getName()), proficiencyByTopic));
