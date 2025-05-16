@@ -34,7 +34,7 @@ public class UserService {
         this.authManager = authManager;
     }
 
-    public Map<String, String> registerUser(String firstName, String lastName, String email, String password) {
+    public Map<String, String> registerUser(String firstName, String lastName, String email, String password) throws UserAlreadyExistsException {
         String validationError = ValidationUtil.validateRegistration(firstName, lastName, email, password);
         if (validationError != null) throw new ValidationException(validationError);
 
@@ -45,9 +45,14 @@ public class UserService {
         return Map.of(MESSAGE, "User registered successfully.");
     }
 
-    public Map<String, String> loginUser(String email, String password) throws UnauthorizedException {
+    public Map<String, String> loginUser(String email, String password) throws UnauthorizedException, UserNotFoundException {
         String validationError = ValidationUtil.validateLogin(email, password);
         if (validationError != null) throw new ValidationException(validationError);
+
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
 
         try {
             authManager.authenticate(
@@ -56,14 +61,17 @@ public class UserService {
             throw new UnauthorizedException("Unauthorized request. Please verify credentials and try again.", ex);
         }
 
-        User user = userRepo.findByEmail(email);
-        if (user == null) {
-            throw new UserNotFoundException("User not found");
-        }
-
         return Map.of("accessToken", jwtService.generateToken(email),
                 "username", user.getFirstName() + " " + user.getLastName(),
                 "role", user.getRole()
         );
+    }
+
+    public User getUserByEmail(String name) throws UserNotFoundException {
+        User user = userRepo.findByEmail(name);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        return user;
     }
 }
