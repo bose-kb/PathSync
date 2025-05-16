@@ -1,8 +1,6 @@
 package com.panicatthedebug.pathsync.controller;
 
-import com.panicatthedebug.pathsync.dto.AnswerSubmissionDTO;
 import com.panicatthedebug.pathsync.dto.AssessmentDTO;
-import com.panicatthedebug.pathsync.dto.AssessmentSummaryDTO;
 import com.panicatthedebug.pathsync.exception.InvalidOperationException;
 import com.panicatthedebug.pathsync.model.Assessment;
 import com.panicatthedebug.pathsync.repository.SurveyResponseRepository;
@@ -11,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/assessments")
@@ -115,20 +115,16 @@ public class AssessmentController {
         }
     }
 
-//    /**
-//     * Get all assessments for the current user
-//     */
-//    @GetMapping
-//    public ResponseEntity<List<AssessmentSummaryDTO>> getUserAssessments(Principal principal) {
-//        String userId = principal.getName();
-//        List<Assessment> assessments = assessmentService.getUserAssessments(userId);
-//
-//        List<AssessmentSummaryDTO> dtos = assessments.stream()
-//                .map(AssessmentSummaryDTO::from)
-//                .collect(Collectors.toList());
-//
-//        return ResponseEntity.ok(dtos);
-//    }
+    /**
+     * Get all assessments for the current user
+     */
+    @GetMapping
+    public ResponseEntity<List<AssessmentDTO>> getUserAssessments(Authentication authentication) {
+        String userId = authentication.getName();
+        List<AssessmentDTO> assessments = assessmentService.getUserAssessments(userId);
+
+        return ResponseEntity.ok(assessments);
+    }
 
 //    /**
 //     * Get a specific assessment
@@ -177,17 +173,15 @@ public class AssessmentController {
     @PostMapping("/{id}/complete")
     public ResponseEntity<Map<String, Object>> completeAssessment(@PathVariable String id, Authentication authentication) {
         String userId = authentication.getName();
-        AssessmentSummaryDTO assessment = assessmentService.completeAssessment(id, userId);
-        Assessment dto = assessmentService.generateAssessmentFromSurvey(userId);
+        Map<String, Object> resultMap = assessmentService.completeAssessment(id, userId);
 
+        Map<String, String> questionResultMap = (Map<String, String>) resultMap.get("ResultMap");
         // Get the final skill level
         String finalSkillLevel = userService.getUserSkillLevel(userId);
-
-        // Generate question result map for learning path
-        Map<String, String> questionResultMap = assessment.getQuestionResponses();
+        int score = Integer.parseInt((String) resultMap.get("Score"));
 
         return ResponseEntity.ok(Map.of(
-                "assessment", dto,
+                "score", score,
                 "finalSkillLevel", finalSkillLevel,
                 "nextStep", "LEARNING_PATH",
                 "message", "Assessment completed. You will now be directed to your personalized learning path.",
