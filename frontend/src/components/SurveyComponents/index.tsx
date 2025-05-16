@@ -72,7 +72,7 @@ export const FormPage = ({
   formData: SurveyData;
   onChange: (field: string, value: string) => void;
   onContinue: () => void;
-  isValid: boolean;
+  isValid: boolean|string;
   roles: string[];
   languages: string[];
 }) => {
@@ -164,7 +164,7 @@ export const QuestionPage = ({
   onChange: (questionId: string, value: string) => void;
   onContinue: () => void;
   isLoading: boolean;
-  isValid: boolean;
+  isValid: boolean | string;
 }) => {
   if (isLoading) {
     return (

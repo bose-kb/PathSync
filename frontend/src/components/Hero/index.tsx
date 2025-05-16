@@ -1,23 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import Button from '../Button';
-
+import React, { useState, useEffect } from "react";
+import Button from "../Button";
+import ChatBotVisible from "../ChatBot/ChatBotVisible"
+import ChatWithUs from "../ChatBot/ChatWithUs";
 const heroImages = [
   {
-    url: '/assets/hero1.jpg',
-    alt: 'Students working'
+    url: "/assets/hero1.jpg",
+    alt: "Students working",
   },
   {
-    url: '/assets/hero2.jpg',
-    alt: 'Professional development'
+    url: "/assets/hero2.jpg",
+    alt: "Professional development",
   },
   {
-    url: '/assets/hero3.jpg',
-    alt: 'Digital classroom'
+    url: "/assets/hero3.jpg",
+    alt: "Digital classroom",
   },
   {
-    url: '/assets/hero1.jpg',
-    alt: 'Online education'
-  }
+    url: "/assets/hero1.jpg",
+    alt: "Online education",
+  },
 ];
 
 const Hero: React.FC = () => {
@@ -33,17 +34,18 @@ const Hero: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const nextSlide = () => {
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex === heroImages.length - 1 ? 0 : prevIndex + 1
-    );
-  };
+  // const nextSlide = () => {
+  //   setCurrentImageIndex((prevIndex) =>
+  //     prevIndex === heroImages.length - 1 ? 0 : prevIndex + 1
+  //   );
+  // };
 
-  const prevSlide = () => {
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex === 0 ? heroImages.length - 1 : prevIndex - 1
-    );
-  };
+  // const prevSlide = () => {
+  //   setCurrentImageIndex((prevIndex) =>
+  //     prevIndex === 0 ? heroImages.length - 1 : prevIndex - 1
+  //   );
+  // };
+
 
   return (
     <div className="relative h-96 md:h-screen max-h-[600px] overflow-hidden">
@@ -54,8 +56,6 @@ const Hero: React.FC = () => {
           alt={heroImages[currentImageIndex].alt}
           className="w-full h-full object-cover transition-opacity duration-1000"
         />
-        {/* Overlay */}
-        {/* <div className="absolute inset-0 bg-black bg-opacity-50"></div> */}
       </div>
 
       {/* Content */}
@@ -65,6 +65,7 @@ const Hero: React.FC = () => {
         </h1>
         <Button primary className="mt-6">Get Started</Button>
       </div>
+      <ChatWithUs />
     </div>
   );
 };
