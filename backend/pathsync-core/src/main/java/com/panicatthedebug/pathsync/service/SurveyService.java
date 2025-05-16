@@ -1,5 +1,6 @@
 package com.panicatthedebug.pathsync.service;
 
+import com.panicatthedebug.pathsync.exception.UserNotFoundException;
 import com.panicatthedebug.pathsync.model.*;
 import com.panicatthedebug.pathsync.dto.SurveySubmissionDTO;
 import com.panicatthedebug.pathsync.exception.ResourceNotFoundException;
@@ -265,7 +266,7 @@ public class SurveyService {
 //        return questions;
 //    }
 
-    public SurveyDefinition getSurveyDefinition(String email, String targetRole, String language) {
+    public SurveyDefinition getSurveyDefinition(String email, String targetRole, String language) throws ResourceNotFoundException {
         SurveyDefinition surveyDefinition = surveyDefinitionRepository
                 .findByTargetRoleAndLanguageAndActive(targetRole, language, true)
                 .orElseThrow(() -> new ResourceNotFoundException("Survey definition not found"));
@@ -284,7 +285,7 @@ public class SurveyService {
         return surveyDefinition;
     }
 
-    public SurveyResponse submitSurvey(String userId, SurveySubmissionDTO submission) {
+    public SurveyResponse submitSurvey(String userId, SurveySubmissionDTO submission) throws UserNotFoundException, ResourceNotFoundException {
         // Validate user exists
         userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));

@@ -4,6 +4,7 @@ import com.panicatthedebug.pathsync.model.Assessment;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class AssessmentDTO {
@@ -19,6 +20,7 @@ public class AssessmentDTO {
     private boolean completed;
     private Integer score;
     private long timeRemainingSeconds;
+    private Map<String,String> questionResponses=null;
 
     // Static factory method
     public static AssessmentDTO from(Assessment assessment, long timeRemainingSeconds) {
@@ -139,5 +141,13 @@ public class AssessmentDTO {
 
     public void setTimeRemainingSeconds(long timeRemainingSeconds) {
         this.timeRemainingSeconds = timeRemainingSeconds;
+    }
+
+    public Map<String, String> getQuestionResponses() {
+        return questionResponses;
+    }
+
+    public void setQuestionResponses(Map<String, String> questionResponses) {
+        this.questionResponses = questionResponses;
     }
 }

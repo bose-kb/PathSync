@@ -1,9 +1,10 @@
 package com.panicatthedebug.pathsync.controller;
 
-import com.panicatthedebug.pathsync.dto.AnswerSubmissionDTO;
 import com.panicatthedebug.pathsync.dto.AssessmentDTO;
-import com.panicatthedebug.pathsync.dto.AssessmentSummaryDTO;
+import com.panicatthedebug.pathsync.exception.AccessDeniedException;
 import com.panicatthedebug.pathsync.exception.InvalidOperationException;
+import com.panicatthedebug.pathsync.exception.ResourceNotFoundException;
+import com.panicatthedebug.pathsync.exception.UserNotFoundException;
 import com.panicatthedebug.pathsync.model.Assessment;
 import com.panicatthedebug.pathsync.repository.SurveyResponseRepository;
 import com.panicatthedebug.pathsync.service.*;
@@ -11,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/assessments")
@@ -92,7 +95,7 @@ public class AssessmentController {
      * Generate an assessment based on survey results
      */
     @PostMapping("/generate")
-    public ResponseEntity<?> generateAssessment(Authentication authentication) {
+    public ResponseEntity<?> generateAssessment(Authentication authentication) throws UserNotFoundException, ResourceNotFoundException {
         String userId = authentication.getName();
 
         // Check if user has already completed an assessment
@@ -115,20 +118,16 @@ public class AssessmentController {
         }
     }
 
-//    /**
-//     * Get all assessments for the current user
-//     */
-//    @GetMapping
-//    public ResponseEntity<List<AssessmentSummaryDTO>> getUserAssessments(Principal principal) {
-//        String userId = principal.getName();
-//        List<Assessment> assessments = assessmentService.getUserAssessments(userId);
-//
-//        List<AssessmentSummaryDTO> dtos = assessments.stream()
-//                .map(AssessmentSummaryDTO::from)
-//                .collect(Collectors.toList());
-//
-//        return ResponseEntity.ok(dtos);
-//    }
+    /**
+     * Get all assessments for the current user
+     */
+    @GetMapping
+    public ResponseEntity<List<AssessmentDTO>> getUserAssessments(Authentication authentication) {
+        String userId = authentication.getName();
+        List<AssessmentDTO> assessments = assessmentService.getUserAssessments(userId);
+
+        return ResponseEntity.ok(assessments);
+    }
 
 //    /**
 //     * Get a specific assessment
@@ -161,7 +160,7 @@ public class AssessmentController {
      * Start an assessment
      */
     @PostMapping("/{id}/start")
-    public ResponseEntity<AssessmentDTO> startAssessment(@PathVariable String id, Authentication authentication) {
+    public ResponseEntity<AssessmentDTO> startAssessment(@PathVariable String id, Authentication authentication) throws AccessDeniedException, InvalidOperationException, ResourceNotFoundException {
         String userId = authentication.getName();
         Assessment assessment = assessmentService.startAssessment(id, userId);
 
@@ -175,19 +174,17 @@ public class AssessmentController {
      * Complete an assessment
      */
     @PostMapping("/{id}/complete")
-    public ResponseEntity<Map<String, Object>> completeAssessment(@PathVariable String id, Authentication authentication) {
+    public ResponseEntity<Map<String, Object>> completeAssessment(@PathVariable String id, Authentication authentication) throws UserNotFoundException, AccessDeniedException, InvalidOperationException, ResourceNotFoundException {
         String userId = authentication.getName();
-        AssessmentSummaryDTO assessment = assessmentService.completeAssessment(id, userId);
-        Assessment dto = assessmentService.generateAssessmentFromSurvey(userId);
+        Map<String, Object> resultMap = assessmentService.completeAssessment(id, userId);
 
+        Map<String, String> questionResultMap = (Map<String, String>) resultMap.get("ResultMap");
         // Get the final skill level
         String finalSkillLevel = userService.getUserSkillLevel(userId);
-
-        // Generate question result map for learning path
-        Map<String, String> questionResultMap = assessment.getQuestionResponses();
+        int score = Integer.parseInt((String) resultMap.get("Score"));
 
         return ResponseEntity.ok(Map.of(
-                "assessment", dto,
+                "score", score,
                 "finalSkillLevel", finalSkillLevel,
                 "nextStep", "LEARNING_PATH",
                 "message", "Assessment completed. You will now be directed to your personalized learning path.",
