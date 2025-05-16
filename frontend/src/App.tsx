@@ -7,6 +7,7 @@ import Signup from './pages/Signup';
 import CoursesSection from './components/CoursesSection';
 import Survey from "./pages/Survey"
 import RoadmapFlow from './components/Roadmap/RoadmapFlow';
+import Assessment from './components/Assesment';
 const Home = () => (
   <>
     <Navbar />
@@ -23,7 +24,8 @@ const App: React.FC = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-                    <Route path="/survey" element={<Survey />} />
+          <Route path="/survey" element={<Survey />} />
+          <Route path="/assesments" element={<Assessment />} />
         </Routes>
       </div>
     </Router>
