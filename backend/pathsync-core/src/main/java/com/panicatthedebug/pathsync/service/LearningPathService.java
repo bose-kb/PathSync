@@ -67,7 +67,7 @@ public class LearningPathService {
                     The proficiency levels are provided in JSON format, where the keys are the topics and the values are the proficiency levels (e.g., "beginner", "intermediate", "advanced").
                     The generated learning path should contain a map of topics in the order they should be learned. Each topic can have multiple subtopics mapped to the parent topic.
                     Each subtopic is also a map consisting of 3 keys, "duration", "completionStatus", and "learningResources".
-                    Duration indicates the time required to complete the subtopic, completionStatus indicates whether the subtopic is completed or not (default is not started), and learningResources is also a map of resources to learn the subtopic.
+                    Duration indicates the time required to complete the subtopic, completionStatus indicates whether the subtopic is completed or not (default is NOT_STARTED), and learningResources is also a map of resources to learn the subtopic.
                     The key in the learningResources map denotes the resource name while the value contains link to the resource. The learning resources can be a mix of videos, articles, official documentation etc.
                     Return the learning path as a JSON object of topics.
                 """;
