@@ -15,16 +15,19 @@ public class SurveyService {
     private final SurveyDefinitionRepository surveyDefinitionRepository;
     private final UserRepository userRepository;
     private final UserService userService;
+    private final ResumeRepo resumeRepo;
 
     public SurveyService(
             SurveyResponseRepository surveyResponseRepository,
             SurveyDefinitionRepository surveyDefinitionRepository,
             UserRepository userRepository,
-            UserService userService) {
+            UserService userService,
+            ResumeRepo resumeRepo) {
         this.surveyResponseRepository = surveyResponseRepository;
         this.surveyDefinitionRepository = surveyDefinitionRepository;
         this.userRepository = userRepository;
         this.userService = userService;
+        this.resumeRepo = resumeRepo;
     }
 
 //    @PostConstruct
@@ -262,10 +265,23 @@ public class SurveyService {
 //        return questions;
 //    }
 
-    public SurveyDefinition getSurveyDefinition(String targetRole, String language) {
-        return surveyDefinitionRepository
+    public SurveyDefinition getSurveyDefinition(String email, String targetRole, String language) {
+        SurveyDefinition surveyDefinition = surveyDefinitionRepository
                 .findByTargetRoleAndLanguageAndActive(targetRole, language, true)
                 .orElseThrow(() -> new ResourceNotFoundException("Survey definition not found"));
+
+        ResumeDetails resumeDetails = resumeRepo.findByEmail(email);
+        if(resumeDetails==null)
+            return surveyDefinition;
+
+        List<SkillQuestion> questions = surveyDefinition.getQuestions();
+        Set<String> skills = new HashSet<>(resumeDetails.getSkills());
+        for (SkillQuestion question : questions) {
+            if (skills.contains(question.getSkillCategory())) {
+                question.setFromResume(true);
+            }
+        }
+        return surveyDefinition;
     }
 
     public SurveyResponse submitSurvey(String userId, SurveySubmissionDTO submission) {
