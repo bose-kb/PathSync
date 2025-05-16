@@ -1,5 +1,7 @@
 package com.panicatthedebug.pathsync.controller;
 
+import com.panicatthedebug.pathsync.exception.ResourceNotFoundException;
+import com.panicatthedebug.pathsync.exception.UserNotFoundException;
 import com.panicatthedebug.pathsync.model.*;
 import com.panicatthedebug.pathsync.dto.*;
 import com.panicatthedebug.pathsync.service.SurveyService;
@@ -47,7 +49,7 @@ public class SurveyController {
     @GetMapping("/definitions/{role}/{language}")
     public ResponseEntity<SurveyDefinitionDTO> getSurveyDefinition(
             @PathVariable String role,
-            @PathVariable String language) {
+            @PathVariable String language) throws ResourceNotFoundException {
         SurveyDefinition definition = surveyService.getSurveyDefinition(role, language);
         return ResponseEntity.ok(SurveyDefinitionDTO.from(definition));
     }
@@ -55,7 +57,7 @@ public class SurveyController {
     @PostMapping
     public ResponseEntity<SurveyResponseDTO> submitSurvey(
             @RequestBody SurveySubmissionDTO submission,
-            Authentication authentication) {
+            Authentication authentication) throws UserNotFoundException, ResourceNotFoundException {
         String userId = authentication.getName();
         SurveyResponse response = surveyService.submitSurvey(userId, submission);
         return ResponseEntity.ok(SurveyResponseDTO.from(response));

@@ -17,6 +17,7 @@ public class User {
     private String targetRole;
     private String targetLanguage;
     private boolean assessmentCompleted;
+    private String finalSkillLevel;
 
     public User(String firstName, String lastName, String email, String password, String role, String targetRole, String targetLanguage, boolean assessmentCompleted) {
         this.firstName = firstName;
@@ -91,6 +92,14 @@ public class User {
 
     public void setAssessmentCompleted(boolean assessmentCompleted) {
         this.assessmentCompleted = assessmentCompleted;
+    }
+
+    public String getFinalSkillLevel() {
+        return finalSkillLevel;
+    }
+
+    public void setFinalSkillLevel(String finalSkillLevel) {
+        this.finalSkillLevel = finalSkillLevel;
     }
 
     @Override

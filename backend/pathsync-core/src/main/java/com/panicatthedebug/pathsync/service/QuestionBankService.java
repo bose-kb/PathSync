@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 
-
 @Service
 public class QuestionBankService {
 
@@ -74,7 +73,7 @@ public class QuestionBankService {
         String systemMessage = """
             You are a helpful assistant.
             You will receive a list of questions in JSON format.
-            Randomly pick any 5 questions from the list and return them as a JSON array in the **same format**.
+            Randomly pick any 2 questions from the list and return them as a JSON array in the **same format**.
         """;
 
         String userMessage = "Here is the list:\n" + questionsJson;
