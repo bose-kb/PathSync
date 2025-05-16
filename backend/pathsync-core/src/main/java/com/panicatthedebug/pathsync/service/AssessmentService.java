@@ -14,25 +14,16 @@ import java.util.*;
 @Service
 public class AssessmentService {
 
-    private final QuestionBankRepository questionBankRepository;
     private final AssessmentRepository assessmentRepository;
     private final SurveyResponseRepository surveyResponseRepository;
     private final UserService userService;
     private final QuestionBankService questionBankService;
 
-//    @Value("${assessment.question-count:15}")
-//    private int questionCount;
-//
-//    @Value("${assessment.duration-minutes:15}")
-//    private int durationMinutes;
-
     public AssessmentService(
-            QuestionBankRepository questionBankRepository,
             AssessmentRepository assessmentRepository,
             SurveyResponseRepository surveyResponseRepository,
             UserService userService,
             QuestionBankService questionBankService) {
-        this.questionBankRepository = questionBankRepository;
         this.assessmentRepository = assessmentRepository;
         this.surveyResponseRepository = surveyResponseRepository;
         this.userService = userService;
@@ -122,9 +113,6 @@ public class AssessmentService {
                 selectedQuestions.add(question);
             }
         }
-
-        // Shuffle the questions for randomized order
-        Collections.shuffle(selectedQuestions);
 
         return selectedQuestions;
     }
