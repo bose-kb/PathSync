@@ -175,7 +175,7 @@ public class LearningPathService {
      */
     public void checkCustomLearnPathAlreadyExists(String name) throws LearnPathAlreadyExistsException {
         if (customLearningPathRepository.existsById(name)) {
-            throw new LearnPathAlreadyExistsException("Custom learn path with this name already exists.");
+            throw new LearnPathAlreadyExistsException("Custom learn path with this id already exists.");
         }
     }
 }
