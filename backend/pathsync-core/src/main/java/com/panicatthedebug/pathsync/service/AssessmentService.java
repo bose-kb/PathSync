@@ -201,7 +201,7 @@ public class AssessmentService {
 
         // Check if assessment is already completed
         if (assessment.isCompleted()) {
-            return Map.of("ResultMap",generateQuestionResultMap(assessment.getQuestions()),"Score",assessment.getScore());
+            return Map.of("ResultMap",generateQuestionResultMap(assessment.getQuestions()),"Score", String.valueOf(assessment.getScore()));
         }
 
         // Check if assessment has started
@@ -234,7 +234,7 @@ public class AssessmentService {
 
         // Save and return the updated assessment
         assessmentRepository.save(assessment);
-        return Map.of("ResultMap",generateQuestionResultMap(assessment.getQuestions()),"Score",score);
+        return Map.of("ResultMap", generateQuestionResultMap(assessment.getQuestions()),"Score", String.valueOf(score));
     }
 
     /**
