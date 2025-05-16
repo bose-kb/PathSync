@@ -1,7 +1,10 @@
 package com.panicatthedebug.pathsync.controller;
 
 import com.panicatthedebug.pathsync.dto.AssessmentDTO;
+import com.panicatthedebug.pathsync.exception.AccessDeniedException;
 import com.panicatthedebug.pathsync.exception.InvalidOperationException;
+import com.panicatthedebug.pathsync.exception.ResourceNotFoundException;
+import com.panicatthedebug.pathsync.exception.UserNotFoundException;
 import com.panicatthedebug.pathsync.model.Assessment;
 import com.panicatthedebug.pathsync.repository.SurveyResponseRepository;
 import com.panicatthedebug.pathsync.service.*;
@@ -92,7 +95,7 @@ public class AssessmentController {
      * Generate an assessment based on survey results
      */
     @PostMapping("/generate")
-    public ResponseEntity<?> generateAssessment(Authentication authentication) {
+    public ResponseEntity<?> generateAssessment(Authentication authentication) throws UserNotFoundException, ResourceNotFoundException {
         String userId = authentication.getName();
 
         // Check if user has already completed an assessment
@@ -157,7 +160,7 @@ public class AssessmentController {
      * Start an assessment
      */
     @PostMapping("/{id}/start")
-    public ResponseEntity<AssessmentDTO> startAssessment(@PathVariable String id, Authentication authentication) {
+    public ResponseEntity<AssessmentDTO> startAssessment(@PathVariable String id, Authentication authentication) throws AccessDeniedException, InvalidOperationException, ResourceNotFoundException {
         String userId = authentication.getName();
         Assessment assessment = assessmentService.startAssessment(id, userId);
 
@@ -171,7 +174,7 @@ public class AssessmentController {
      * Complete an assessment
      */
     @PostMapping("/{id}/complete")
-    public ResponseEntity<Map<String, Object>> completeAssessment(@PathVariable String id, Authentication authentication) {
+    public ResponseEntity<Map<String, Object>> completeAssessment(@PathVariable String id, Authentication authentication) throws UserNotFoundException, AccessDeniedException, InvalidOperationException, ResourceNotFoundException {
         String userId = authentication.getName();
         Map<String, Object> resultMap = assessmentService.completeAssessment(id, userId);
 

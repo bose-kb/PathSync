@@ -1,9 +1,7 @@
 package com.panicatthedebug.pathsync.service;
 
 import com.panicatthedebug.pathsync.dto.AssessmentDTO;
-import com.panicatthedebug.pathsync.exception.AccessDeniedException;
-import com.panicatthedebug.pathsync.exception.InvalidOperationException;
-import com.panicatthedebug.pathsync.exception.ResourceNotFoundException;
+import com.panicatthedebug.pathsync.exception.*;
 import com.panicatthedebug.pathsync.model.*;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +35,7 @@ public class AssessmentService {
      * Generate an assessment based on survey results if the user is intermediate or advanced
      * and hasn't completed an assessment yet
      */
-    public Assessment generateAssessmentFromSurvey(String userId) {
+    public Assessment generateAssessmentFromSurvey(String userId) throws UserNotFoundException, InvalidOperationException, ResourceNotFoundException {
         // Check if user has already completed an assessment
         if (userService.hasAssessmentCompleted(userId)) {
             throw new InvalidOperationException("You have already completed your assessment");
@@ -163,7 +161,7 @@ public class AssessmentService {
     /**
      * Start an assessment
      */
-    public Assessment startAssessment(String assessmentId, String userId) {
+    public Assessment startAssessment(String assessmentId, String userId) throws AccessDeniedException, InvalidOperationException, ResourceNotFoundException {
         Assessment assessment = assessmentRepository.findById(assessmentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Assessment not found"));
 
@@ -192,7 +190,7 @@ public class AssessmentService {
      * Complete an assessment and calculate the score
      * Also update the user's final skill level based on assessment results
      */
-    public Map<String,Object> completeAssessment(String assessmentId, String userId) {
+    public Map<String,Object> completeAssessment(String assessmentId, String userId) throws UserNotFoundException, AccessDeniedException, ResourceNotFoundException, InvalidOperationException {
         Assessment assessment = assessmentRepository.findById(assessmentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Assessment not found"));
 
