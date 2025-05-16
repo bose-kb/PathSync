@@ -10,7 +10,7 @@ import java.util.Map;
 public class SurveyResponse {
     @Id
     private String id;
-    private String userId;
+    private String userEmail;
     private String targetRole;      // "Backend Engineer", "Frontend Engineer", "Testing Engineer"
     private String preferredLanguage; // "Java", "JavaScript"
     private Map<String, String> skillAssessments; // skill -> BEGINNER/INTERMEDIATE/ADVANCED
@@ -27,12 +27,12 @@ public class SurveyResponse {
         this.id = id;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
     public String getTargetRole() {

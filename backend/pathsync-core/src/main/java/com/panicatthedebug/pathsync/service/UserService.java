@@ -66,4 +66,48 @@ public class UserService {
                 "role", user.getRole()
         );
     }
+
+    public void setTargetLanguage(String email, String targetLanguage) {
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        user.setTargetLanguage(targetLanguage);
+        userRepo.save(user);
+    }
+
+    public void setTargetRole(String email, String targetRole) {
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        user.setTargetRole(targetRole);
+        userRepo.save(user);
+    }
+
+    public void setAssessmentCompleted(String email, String finalSkillLevel) {
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        user.setFinalSkillLevel(finalSkillLevel);
+        user.setAssessmentCompleted(true);
+        userRepo.save(user);
+    }
+
+    public boolean hasAssessmentCompleted(String email) {
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        return user.isAssessmentCompleted();
+    }
+
+    public String getUserSkillLevel(String email) {
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        return user.getFinalSkillLevel();
+    }
 }
