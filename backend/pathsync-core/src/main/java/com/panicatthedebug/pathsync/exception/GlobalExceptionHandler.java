@@ -34,6 +34,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({
             UserAlreadyExistsException.class,
             ValidationException.class,
+            InvalidOperationException.class,
             SurveyNotCompleteException.class,
             LearnPathAlreadyExistsException.class
     })
@@ -60,6 +61,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({
             UnauthorizedException.class,
+            AccessDeniedException.class
     })
     public ResponseEntity<Object> handleUnauthorized(Exception e, WebRequest webRequest) {
         return handleExceptionInternal(e, Map.of(MESSAGE, e.getMessage()),
@@ -73,7 +75,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             Exception.class,
     })
     public ResponseEntity<Object> handleServerError(Exception e, WebRequest webRequest) {
-        e.printStackTrace();
         return handleExceptionInternal(e, Map.of(MESSAGE, "An unknown error occurred"),
                 new HttpHeaders(),
                 HttpStatus.INTERNAL_SERVER_ERROR,
