@@ -1,5 +1,6 @@
 package com.panicatthedebug.pathsync.service;
 
+import com.panicatthedebug.pathsync.exception.LearnPathAlreadyExistsException;
 import com.panicatthedebug.pathsync.exception.QuestionNotFoundException;
 import com.panicatthedebug.pathsync.model.QuestionBankItem;
 import com.panicatthedebug.pathsync.repository.QuestionBankRepository;
@@ -16,6 +17,13 @@ public class AssessmentService {
         this.questionBankRepository = questionBankRepository;
     }
 
+    /**
+     * This method is used to analyze the test results and return the proficiency level for each topic.
+     *
+     * @param questionResults A map containing the question results.
+     * @return A map containing the proficiency level for each topic.
+     * @throws QuestionNotFoundException if a question ID is not found in the database.
+     */
     public Map<String, String> analyzeTestResults(Map<String, String> questionResults) throws QuestionNotFoundException {
         Map<String, Integer> correctAnswersByTopic = new HashMap<>();
         Map<String, Integer> totalQuestionsByTopic = new HashMap<>();
@@ -50,6 +58,13 @@ public class AssessmentService {
         return proficiencyByTopic;
     }
 
+    /**
+     * This method is used to get the proficiency of a user by topic.
+     *
+     * @param questionOutcomes A map containing the question results.
+     * @return A map containing the proficiency level for each topic.
+     * @throws QuestionNotFoundException if a question ID is not found in the database.
+     */
     public Map<String, String> getProficiencyByTopic(Map<String, Map<String, String>> questionOutcomes) throws QuestionNotFoundException {
         return analyzeTestResults(questionOutcomes.get("questionResults"));
     }
