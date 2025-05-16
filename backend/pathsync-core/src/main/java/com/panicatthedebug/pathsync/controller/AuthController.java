@@ -1,6 +1,8 @@
 package com.panicatthedebug.pathsync.controller;
 
 import com.panicatthedebug.pathsync.exception.UnauthorizedException;
+import com.panicatthedebug.pathsync.exception.UserAlreadyExistsException;
+import com.panicatthedebug.pathsync.exception.UserNotFoundException;
 import com.panicatthedebug.pathsync.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +25,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Object> register(@RequestBody Map<String, String> userData) {
+    public ResponseEntity<Object> register(@RequestBody Map<String, String> userData) throws UserAlreadyExistsException {
         return ResponseEntity.ok(userService.registerUser(
                 userData.get("firstName"),
                 userData.get("lastName"),
@@ -33,7 +35,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody Map<String, String> loginData) throws UnauthorizedException {
+    public ResponseEntity<Object> login(@RequestBody Map<String, String> loginData) throws UnauthorizedException, UserNotFoundException {
         return ResponseEntity.ok(userService.loginUser(
                 loginData.get("email"),
                 loginData.get("password")
