@@ -17,7 +17,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
 
     @ExceptionHandler({
             UserAlreadyExistsException.class,
-            ValidationException.class
+            ValidationException.class,
+            InvalidOperationException.class
     })
     public ResponseEntity<Object> handleBadRequest(Exception e, WebRequest webRequest) {
         return handleExceptionInternal(e, Map.of(MESSAGE, e.getMessage()),
@@ -40,6 +41,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
 
     @ExceptionHandler({
             UnauthorizedException.class,
+            AccessDeniedException.class
     })
     public ResponseEntity<Object> handleUnauthorized(Exception e, WebRequest webRequest) {
         return handleExceptionInternal(e, Map.of(MESSAGE, e.getMessage()),

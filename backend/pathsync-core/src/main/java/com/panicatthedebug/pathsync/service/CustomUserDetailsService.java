@@ -1,7 +1,7 @@
 package com.panicatthedebug.pathsync.service;
 
 import com.panicatthedebug.pathsync.model.User;
-import com.panicatthedebug.pathsync.repo.UserRepo;
+import com.panicatthedebug.pathsync.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,14 +12,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    private final UserRepo userRepo;
+    private final UserRepository userRepo;
 
     @Autowired
-    public CustomUserDetailsService(UserRepo userRepo) {
+    public CustomUserDetailsService(UserRepository userRepo) {
         this.userRepo = userRepo;
     }
 
