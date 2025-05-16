@@ -34,7 +34,7 @@ public class UserService {
         this.authManager = authManager;
     }
 
-    public Map<String, String> registerUser(String firstName, String lastName, String email, String password) {
+    public Map<String, String> registerUser(String firstName, String lastName, String email, String password) throws UserAlreadyExistsException, ValidationException {
         String validationError = ValidationUtil.validateRegistration(firstName, lastName, email, password);
         if (validationError != null) throw new ValidationException(validationError);
 
@@ -45,9 +45,14 @@ public class UserService {
         return Map.of(MESSAGE, "User registered successfully.");
     }
 
-    public Map<String, String> loginUser(String email, String password) throws UnauthorizedException {
+    public Map<String, String> loginUser(String email, String password) throws UnauthorizedException, UserNotFoundException, ValidationException {
         String validationError = ValidationUtil.validateLogin(email, password);
         if (validationError != null) throw new ValidationException(validationError);
+
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
 
         try {
             authManager.authenticate(
@@ -56,18 +61,21 @@ public class UserService {
             throw new UnauthorizedException("Unauthorized request. Please verify credentials and try again.", ex);
         }
 
-        User user = userRepo.findByEmail(email);
-        if (user == null) {
-            throw new UserNotFoundException("User not found");
-        }
-
         return Map.of("accessToken", jwtService.generateToken(email),
                 "username", user.getFirstName() + " " + user.getLastName(),
                 "role", user.getRole()
         );
     }
 
-    public void setTargetLanguage(String email, String targetLanguage) {
+    public User getUserByEmail(String name) throws UserNotFoundException {
+        User user = userRepo.findByEmail(name);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        return user;
+    }
+
+    public void setTargetLanguage(String email, String targetLanguage) throws UserNotFoundException {
         User user = userRepo.findByEmail(email);
         if (user == null) {
             throw new UserNotFoundException("User not found");
@@ -76,7 +84,7 @@ public class UserService {
         userRepo.save(user);
     }
 
-    public void setTargetRole(String email, String targetRole) {
+    public void setTargetRole(String email, String targetRole) throws UserNotFoundException {
         User user = userRepo.findByEmail(email);
         if (user == null) {
             throw new UserNotFoundException("User not found");
@@ -85,7 +93,7 @@ public class UserService {
         userRepo.save(user);
     }
 
-    public void setAssessmentCompleted(String email, String finalSkillLevel) {
+    public void setAssessmentCompleted(String email, String finalSkillLevel) throws UserNotFoundException {
         User user = userRepo.findByEmail(email);
         if (user == null) {
             throw new UserNotFoundException("User not found");
@@ -95,7 +103,7 @@ public class UserService {
         userRepo.save(user);
     }
 
-    public boolean hasAssessmentCompleted(String email) {
+    public boolean hasAssessmentCompleted(String email) throws UserNotFoundException {
         User user = userRepo.findByEmail(email);
         if (user == null) {
             throw new UserNotFoundException("User not found");
@@ -103,7 +111,7 @@ public class UserService {
         return user.isAssessmentCompleted();
     }
 
-    public String getUserSkillLevel(String email) {
+    public String getUserSkillLevel(String email) throws UserNotFoundException {
         User user = userRepo.findByEmail(email);
         if (user == null) {
             throw new UserNotFoundException("User not found");
