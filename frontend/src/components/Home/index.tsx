@@ -1,7 +1,6 @@
 import React from "react";
 import Navbar from "../Navbar";
 import Hero from "../Hero";
-import CoursesSection from "../CoursesSection";
 import Button from "../Button";
 import ChatWithUs from "../ChatBot/ChatWithUs";
 

@@ -472,7 +472,7 @@
 // }
 
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import {
   Calendar,
   CheckCircle2,
@@ -492,9 +492,12 @@ import ProgressBar from "./ProgressBar";
 
 // Import custom hook for data fetching
 import useDashboardData from "./useDashboardData";
+import Navbar from "../Navbar";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("upcoming");
+
+    const navigate = useNavigate();
 
   const {
     dashboardMetrics,
@@ -516,6 +519,15 @@ export default function Dashboard() {
       </div>
     );
   }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+
+  const handleLogout = () => {
+    // Handle user logout, e.g., clear tokens, reset state
+    // Redirect to the home page
+    navigate("/");
+    localStorage.clear();
+  };
 
   if (error) {
     return (
@@ -544,6 +556,9 @@ export default function Dashboard() {
   };
 
   return (
+    <div>
+    <Navbar isLoggedIn 
+        onLogout={handleLogout}/>
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Profile header */}
@@ -835,6 +850,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 }

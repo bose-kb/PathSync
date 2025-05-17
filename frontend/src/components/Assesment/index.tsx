@@ -87,29 +87,54 @@ const AssessmentPage = () => {
   };
 
   const handleSubmit = async () => {
-    setIsLoading(true);
-    try {
-      const result = await submitAssessment(assessmentId);
-      setIsSubmitted(true);
-      setToast({
-        message: "Assessment submitted successfully.",
-        status: "success",
-      });
+  setIsLoading(true);
+  try {
+    const result = await submitAssessment(assessmentId);
+    setIsSubmitted(true);
+    setToast({
+      message: "Assessment submitted successfully.",
+      status: "success",
+    });
 
-      console.log(result);
-      const questionResults = result.questionResults;
-      await roadMapApi.createLearningPath({ questionResults: questionResults });      
-      navigate("/dashboard");
-    } catch (error) {
-      setToast({
-        message: "Failed to submit the assessment. Please try again later.",
-        status: "error",
-      });
-      console.error("Error submitting assessment:", error);
-    } finally {
-      setIsLoading(false);
+    console.log(result);
+    const questionResults = result.questionResults;
+
+    // Call your internal roadmap API
+    await roadMapApi.createLearningPath({ questionResults });
+
+    // Get access token from local storage
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      throw new Error("No access token found in localStorage.");
     }
-  };
+
+    // Make API call to /learn-path/start
+    const response = await fetch("http://localhost:8080/learn-path/start", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to start learning path");
+    }
+
+    // Navigate to dashboard
+    navigate("/dashboard");
+  } catch (error) {
+    setToast({
+      message: "Failed to submit the assessment. Please try again later.",
+      status: "error",
+    });
+    console.error("Error submitting assessment:", error);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const isAssessmentValid =
     questions.length > 0 && questions.every((q) => answers[q.id]);
