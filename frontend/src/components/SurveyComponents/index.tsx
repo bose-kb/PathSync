@@ -72,7 +72,7 @@ export const FormPage = ({
   formData: SurveyData;
   onChange: (field: string, value: string) => void;
   onContinue: () => void;
-  isValid: boolean;
+  isValid: boolean|string;
   roles: string[];
   languages: string[];
 }) => {
@@ -151,6 +151,8 @@ export const DropdownQuestion = ({
  * QuestionPage Component
  * Displays the technical assessment page for survey questions.
  */
+import { useNavigate } from 'react-router-dom';
+
 export const QuestionPage = ({
   questions,
   answers,
@@ -164,8 +166,24 @@ export const QuestionPage = ({
   onChange: (questionId: string, value: string) => void;
   onContinue: () => void;
   isLoading: boolean;
-  isValid: boolean;
+  isValid: boolean | string;
 }) => {
+  const navigate = useNavigate(); // Initialize useNavigate hook for navigation
+
+  // Function to handle click on "Submit" button
+  const handleButtonClick = () => {
+    // Trigger API in the background
+
+    // Call onContinue to maintain the user flow
+    onContinue();
+
+    // Navigate to /dashboard
+    setTimeout(() => {
+      navigate('/dashboard');  
+    }, 5000);
+    
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-12">
@@ -189,7 +207,7 @@ export const QuestionPage = ({
 
       {/* Continue button */}
       <button
-        onClick={onContinue}
+        onClick={handleButtonClick}
         disabled={!isValid}
         className={`w-full py-3 rounded-md transition-colors ${
           isValid

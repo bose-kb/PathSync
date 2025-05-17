@@ -1,0 +1,28 @@
+// src/services/assessmentApi.ts
+import axios from 'axios';
+import axiosInstance from './api';
+
+// Replace this with your actual token fetching logic
+const getToken = () => localStorage.getItem('token');
+
+
+
+export async function generateAssessment() {
+  try {
+    const response = await axiosInstance.post('/assessments/generate');
+    return response.data;
+  } catch (error: any) {
+    console.error('Error generating assessment:', error.response?.data || error.message);
+    throw error;
+  }
+}
+
+export async function startAssessment(assessmentId: string) {
+  const response = await axiosInstance.post(`/assessments/${assessmentId}/start`);
+  return response.data;
+}
+
+export async function submitAssessment(assessmentId: string, answers: Record<string, string>) {
+  const response = await axiosInstance.post(`/assessments/${assessmentId}/complete`, { answers });
+  return response.data;
+}

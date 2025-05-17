@@ -1,19 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import CoursesSection from './components/CoursesSection';
 import Survey from "./pages/Survey"
-
-const Home = () => (
-  <>
-    <Navbar />
-    <Hero />
-    <CoursesSection />
-  </>
-);
+import RoadmapFlow from './components/Roadmap/RoadmapFlow';
+import Assessment from './components/Assesment';
+import Home from './components/Home';
+import Dashboard from './components/Dashboard';
 
 const App: React.FC = () => {
   return (
@@ -23,7 +16,10 @@ const App: React.FC = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-                    <Route path="/survey" element={<Survey />} />
+          <Route path="/survey" element={<Survey />} />
+          <Route path="/assesments" element={<Assessment />} />
+          <Route path="/roadmap" element={<RoadmapFlow />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </div>
     </Router>
