@@ -180,8 +180,9 @@ PathSync was created by a team of passionate developers and educators who believ
 [//]: # (- **Email**: team@pathsync.io)
  
 [//]: # (- **GitHub Issues**: For bug reports and feature requests)
+
 ---
  
 <p align="center">
-<i>PathSync: Your journey to becoming a better developer starts here.</i>
+   <i>PathSync: Your journey to becoming a better developer starts here.</i>
 </p>
