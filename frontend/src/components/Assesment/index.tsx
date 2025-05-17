@@ -16,7 +16,7 @@ const AssessmentPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   const [toast, setToast] = useState<{ message: string; status: 'success' | 'error' | null }>({
     message: '',
@@ -82,49 +82,29 @@ const AssessmentPage = () => {
   };
 
   const handleSubmit = async () => {
-  setIsLoading(true);
-  try {
-    const result = await submitAssessment(assessmentId);
-    setIsSubmitted(true);
-    setToast({
-      message: 'Assessment submitted successfully.',
-      status: 'success',
-    });
+    setIsLoading(true);
+    try {
+      const result = await submitAssessment(assessmentId);
+      setIsSubmitted(true);
+      setToast({
+        message: 'Assessment submitted successfully.',
+        status: 'success',
+      });
 
-    console.log(result);
-    // const {questionResults}=result;
- const questionResults={
-  "6826f4e7183ccfa0abc0821d": "INCORRECT",
-  "6826f4e7183ccfa0abc08220": "INCORRECT",
-  "6826f4e7183ccfa0abc08227": "INCORRECT",
-  "6826f4e7183ccfa0abc08229": "INCORRECT",
-  "682701d6183ccfa0abc082a4": "INCORRECT",
-  "682701d6183ccfa0abc0829d": "INCORRECT",
-  "682701d6183ccfa0abc0829e": "INCORRECT",
-  "682701d6183ccfa0abc08297": "INCORRECT",
-  "682703b9183ccfa0abc082bb": "INCORRECT",
-  "682703b9183ccfa0abc082bd": "INCORRECT"
-}
-
-const payload = {
-  questionResults
-};
-
-        console.log("Sending this",payload);
-
-    await roadMapApi.createLearningPath( payload );
-    // await roadMapApi.createLearningPath( {questionResults} );
-    navigate('/roadmap');
-  } catch (error) {
-    setToast({
-      message: 'Failed to submit the assessment. Please try again later.',
-      status: 'error',
-    });
-    console.error('Error submitting assessment:', error);
-  } finally {
-    setIsLoading(false);
-  }
-};
+      console.log(result);
+      const questionResults = result.questionResults;
+      await roadMapApi.createLearningPath({questionResults: questionResults});
+      navigate('/roadmap');
+    } catch (error) {
+      setToast({
+        message: 'Failed to submit the assessment. Please try again later.',
+        status: 'error',
+      });
+      console.error('Error submitting assessment:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
 
   const isAssessmentValid = questions.length > 0 && questions.every((q) => answers[q.id]);
@@ -200,11 +180,10 @@ const payload = {
                   <button
                     onClick={handleSubmit}
                     disabled={!isAssessmentValid}
-                    className={`w-full py-3 mt-6 rounded-md transition-colors ${
-                      isAssessmentValid
-                        ? 'bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer'
-                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    }`}
+                    className={`w-full py-3 mt-6 rounded-md transition-colors ${isAssessmentValid
+                      ? 'bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      }`}
                   >
                     Submit Assessment
                   </button>
