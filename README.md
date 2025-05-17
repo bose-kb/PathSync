@@ -3,7 +3,7 @@
 <p align="center">
  
 [//]: # (  <img src="./docs/images/pathsync-logo-dark.png#gh-dark-mode-only" alt="PathSync Logo" />)
-<img src="./docs/images/pathsync-logo-light.png" alt="PathSync Logo" width="100%" height="50%" />
+<img src="./docs/images/pathsync-logo-light.png" alt="PathSync Logo" width="50%" height="50%" />
 </p>
  
 <div align="center">
