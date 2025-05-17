@@ -22,7 +22,8 @@ export async function startAssessment(assessmentId: string) {
   return response.data;
 }
 
-export async function submitAssessment(assessmentId: string, answers: Record<string, string>) {
-  const response = await axiosInstance.post(`/assessments/${assessmentId}/complete`, { answers });
+export async function submitAssessment(assessmentId: string) {
+    // console.log(answers);
+  const response = await axiosInstance.post(`/assessments/${assessmentId}/complete`);
   return response.data;
 }

@@ -82,28 +82,40 @@ const AssessmentPage = () => {
   };
 
   const handleSubmit = async () => {
-    setIsLoading(true);
-    try {
-      const result = await submitAssessment(assessmentId, answers);
-      setIsSubmitted(true);
-      setToast({
-        message: `Assessment submitted successfully.`,
-        status: 'success',
-      });
+  setIsLoading(true);
+  try {
+    const result = await submitAssessment(assessmentId);
+    setIsSubmitted(true);
+    setToast({
+      message: 'Assessment submitted successfully.',
+      status: 'success',
+    });
 
-      console.log(answers);
-      await roadMapApi.createLearningPath(answers);
-      navigate('/roadmap');
-    } catch (error) {
-      setToast({
-        message: 'Failed to submit the assessment. Please try again later.',
-        status: 'error',
-      });
-      console.error('Error submitting assessment:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    console.log(result);
+    // Transform into questionResults format
+    // const questionResults: Record<string, 'CORRECT' | 'INCORRECT'> = {};
+    // questions.forEach((q) => {
+    //   questionResults[q.id] =
+    //     answers[q.id] === q.correctOption ? 'CORRECT' : 'INCORRECT';
+
+    // Now call the learning path generation API
+    const {questionResults}=result;
+
+        console.log("Sending this",{questionResults});
+
+    await roadMapApi.createLearningPath({ questionResults });
+    navigate('/roadmap');
+  } catch (error) {
+    setToast({
+      message: 'Failed to submit the assessment. Please try again later.',
+      status: 'error',
+    });
+    console.error('Error submitting assessment:', error);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const isAssessmentValid = questions.length > 0 && questions.every((q) => answers[q.id]);
 

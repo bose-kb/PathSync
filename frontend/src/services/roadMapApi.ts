@@ -1,4 +1,5 @@
 // src/services/roadMapApi.js
+import { AxiosRequestConfig } from 'axios';
 import axiosInstance from './api';
 
 /**
@@ -21,7 +22,7 @@ const roadMapApi = {
    */
   createLearningPath: (questionOutcomes) => {
     console.log(questionOutcomes);
-    return axiosInstance.get('/learn-path/create', questionOutcomes.questionResults );
+    return axiosInstance.get('/learn-path/create', questionOutcomes );
   },
   
   /**
@@ -31,7 +32,7 @@ const roadMapApi = {
    * @param {string} completionStatus - The new completion status ('completed' or 'not started')
    * @returns {Promise} Promise object representing the API response
    */
-  updateCompletionStatus: (topic, subTopic, completionStatus) => {
+  updateCompletionStatus: (topic: any, subTopic: any, completionStatus: any) => {
     return axiosInstance.post('/learn-path/update-status', {
       topic,
       subTopic,
