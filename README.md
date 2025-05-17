@@ -2,8 +2,8 @@
  
 <p align="center">
  
-[//]: # (  <img src="./docs/images/pathsync-logo-dark.png#gh-dark-mode-only" alt="PathSync Logo" width="60%" />)
-<img src="./docs/images/pathsync-logo-light.png#gh-light-mode-only" alt="PathSync Logo" width="60%" />
+[//]: # (  <img src="./docs/images/pathsync-logo-dark.png#gh-dark-mode-only" alt="PathSync Logo" />)
+<img src="./docs/images/pathsync-logo-light.png" alt="PathSync Logo" width="100%" height="50%" />
 </p>
  
 <div align="center">
@@ -12,7 +12,6 @@
 [![Built with](https://img.shields.io/badge/Built_with-Spring_Boot-green.svg)](https://spring.io/projects/spring-boot)
 [![Frontend](https://img.shields.io/badge/Frontend-React-61dafb.svg)](https://reactjs.org/)
 [![Database](https://img.shields.io/badge/Database-MongoDB-4DB33D.svg)](https://www.mongodb.com/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
  
 </div>
  
@@ -26,8 +25,6 @@ PathSync is an intelligent learning platform designed to help developers at all 
 - 🎯 **Personalized Learning Paths**: Custom-tailored learning recommendations based on your skill gaps and career goals
 - 📚 **Rich Content Library**: Curated high-quality resources including articles, videos, tutorials, and interactive coding exercises
 - 📊 **Progress Tracking**: Visual dashboards to monitor your learning journey and skill development
- 
-[//]: # (- 🏆 **Skill Verification**: Regular challenges and assessments to validate your growing expertise)
 - 🧠 **Wellbeing Monitoring**: Track your learning stamina, prevent burnout, and maintain optimal productivity with personalized pace recommendations and break reminders
  
 ## Screenshots
@@ -116,21 +113,12 @@ Your learning path evolves as you grow:
    ```
  
 4. **Access the application**
-    - Frontend: http://localhost:3000
-    - Backend API: http://localhost:8080
-    - API Documentation: http://localhost:8080/swagger-ui.html
+   - Frontend: http://localhost:5173
+   - Backend API: http://localhost:8080
  
  
 ## Architecture
- 
-<details>
-<summary>System Architecture (Click to view)</summary>
-&nbsp;
- 
-![System Architecture](./docs/images/architecture.png)
-*High-level overview of PathSync's system architecture*
- 
-</details>
+PathSync is built on a microservices architecture, ensuring scalability and maintainability. The system is divided into several key components:
  
 <details>
 <summary>Assessment Flow (Click to view)</summary>
@@ -138,15 +126,6 @@ Your learning path evolves as you grow:
  
 ![Assessment Flow](./docs/images/assessment-flow.png)
 *Detailed flow of the skill assessment process*
- 
-</details>
- 
-<details>
-<summary>Learning Path Generation (Click to view)</summary>
-&nbsp;
- 
-![Learning Path Generation](./docs/images/path-generation.png)
-*How personalized learning paths are created*
  
 </details>
  
@@ -160,7 +139,6 @@ PathSync provides a comprehensive API for integration with other learning system
 - **Content API**: Access to learning resources and materials
 - **Progress API**: Tracking and reporting on user advancement
  
-Full API documentation is available at `/swagger-ui.html` when running the application.
  
 ## Contributing
  
@@ -179,7 +157,7 @@ Please adhere to this project's [`CODE_OF_CONDUCT.md`](docs/CODE_OF_CONDUCT.md).
     - Industry-specific learning paths
     - Advanced skill certification options
     - AI-powered learning assistant
-
+ 
  
 ## Our Team
  
@@ -202,7 +180,6 @@ PathSync was created by a team of passionate developers and educators who believ
 [//]: # (- **Email**: team@pathsync.io)
  
 [//]: # (- **GitHub Issues**: For bug reports and feature requests)
- 
 ---
  
 <p align="center">
