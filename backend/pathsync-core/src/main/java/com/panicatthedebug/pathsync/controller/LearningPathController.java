@@ -69,12 +69,11 @@ public class LearningPathController {
     /**
      * Endpoint to start a learning path for a user.
      *
-     * @param userEmail       The user's email.
      * @return A response entity indicating success.
      */
     @PostMapping("/start")
-    public ResponseEntity<Void> startLearningPath(@RequestParam String userEmail) {
-        learningPathService.startLearningPath(userEmail);
+    public ResponseEntity<Void> startLearningPath(Authentication authentication) {
+        learningPathService.startLearningPath(authentication.getName());
         return ResponseEntity.ok().build();
     }
 }
