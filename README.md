@@ -8,10 +8,10 @@
  
 <div align="center">
  
-[![Version Info](https://img.shields.io/badge/Current_Version-1.0.0-blue.svg)](https://github.com/pathsync-team/pathsync/releases)
-[![Built with](https://img.shields.io/badge/Built_with-Spring_Boot-green.svg)](https://spring.io/projects/spring-boot)
-[![Frontend](https://img.shields.io/badge/Frontend-React-61dafb.svg)](https://reactjs.org/)
-[![Database](https://img.shields.io/badge/Database-MongoDB-4DB33D.svg)](https://www.mongodb.com/)
+![Version Info](assets/badges/version.svg)
+![Built with Spring Boot](assets/badges/spring-boot.svg)
+![Frontend React](assets/badges/react.svg)
+![Database MongoDB](assets/badges/mongodb.svg)
  
 </div>
  
