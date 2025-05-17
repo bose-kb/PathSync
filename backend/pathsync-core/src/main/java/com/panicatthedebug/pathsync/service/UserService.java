@@ -64,7 +64,7 @@ public class UserService {
         return Map.of("accessToken", jwtService.generateToken(email),
                 "username", user.getFirstName() + " " + user.getLastName(),
                 "role", user.getRole(),
-                "surveyStatus", user.getTargetRole().isBlank()? "INCOMPLETE" : "COMPLETE",
+                "surveyStatus", user.getTargetRole() == null || user.getTargetRole().isBlank()? "INCOMPLETE" : "COMPLETE",
                 "assessmentStatus", user.isAssessmentCompleted()? "COMPLETE" : "INCOMPLETE"
         );
     }
