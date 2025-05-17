@@ -1,38 +1,210 @@
-# PathSync
-
-## Description
-PathSync is an AI-driven platform that transforms learning into personalized career development by analyzing resumes, identifying skill gaps, and creating customized growth paths with curated resources, real-time industry alignment, and engaging progress tracking.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
+# PathSync: Your Personalized Campus to Career Learning Path
+ 
+<p align="center">
+ 
+[//]: # (  <img src="./docs/images/pathsync-logo-dark.png#gh-dark-mode-only" alt="PathSync Logo" width="60%" />)
+<img src="./docs/images/pathsync-logo-light.png#gh-light-mode-only" alt="PathSync Logo" width="60%" />
+</p>
+ 
+<div align="center">
+ 
+[![Version Info](https://img.shields.io/badge/Current_Version-1.0.0-blue.svg)](https://github.com/pathsync-team/pathsync/releases)
+[![Built with](https://img.shields.io/badge/Built_with-Spring_Boot-green.svg)](https://spring.io/projects/spring-boot)
+[![Frontend](https://img.shields.io/badge/Frontend-React-61dafb.svg)](https://reactjs.org/)
+[![Database](https://img.shields.io/badge/Database-MongoDB-4DB33D.svg)](https://www.mongodb.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+ 
+</div>
+ 
+<h1 align="center">Personalized Learning Paths for Developers 🚀</h1>
+ 
+PathSync is an intelligent learning platform designed to help developers at all levels enhance their skills through personalized learning journeys. By combining skill assessment, adaptive learning, and targeted content recommendations, DevPath creates a customized path for each developer based on their unique strengths, weaknesses, and career goals.
+ 
+## Features
+ 
+- 📋 **Comprehensive Skill Assessment**: Initial survey and technical assessment to accurately gauge your current skill level
+- 🎯 **Personalized Learning Paths**: Custom-tailored learning recommendations based on your skill gaps and career goals
+- 📚 **Rich Content Library**: Curated high-quality resources including articles, videos, tutorials, and interactive coding exercises
+- 📊 **Progress Tracking**: Visual dashboards to monitor your learning journey and skill development
+ 
+[//]: # (- 🏆 **Skill Verification**: Regular challenges and assessments to validate your growing expertise)
+- 🧠 **Wellbeing Monitoring**: Track your learning stamina, prevent burnout, and maintain optimal productivity with personalized pace recommendations and break reminders
+ 
+## Screenshots
+ 
+ 
+## How It Works
+ 
+### 1. Skill Assessment
+ 
+PathSync begins with a comprehensive evaluation of your technical skills:
+ 
+- **Initial Survey**: Share your experience level, preferred technologies, and career goals
+- **Adaptive Technical Assessment**: Answer questions that dynamically adjust in difficulty based on your responses
+- **Skill Gap Analysis**: Receive a detailed breakdown of your strengths and areas for improvement
+ 
+### 2. Personalized Learning Path Generation
+ 
+Based on your assessment results, PathSync creates a customized learning journey:
+ 
+- **Topic Prioritization**: Focus on the skills most relevant to your goals and current gaps
+- **Difficulty Calibration**: Content difficulty matched to your proficiency level
+- **Learning Style Adaptation**: Resources aligned with your preferred learning methods
+ 
+[//]: # (### 3. Guided Learning Experience)
+ 
+[//]: # ()
+[//]: # (Follow your personalized path with structured support:)
+ 
+[//]: # ()
+[//]: # (- **Step-by-Step Progression**: Clear sequence of topics and resources)
+ 
+[//]: # (- **Interactive Challenges**: Apply your knowledge with coding exercises and projects)
+ 
+[//]: # (- **Regular Checkpoints**: Validate your understanding with quizzes and assessments)
+ 
+### 4. Continuous Improvement
+ 
+Your learning path evolves as you grow:
+ 
+- **Progress Tracking**: Visualize your advancement through skills and topics
+- **Adaptive Recommendations**: Content suggestions that adjust based on your performance
+- **Skill Verification**: Regular opportunities to demonstrate and validate your new abilities
+ 
+## Technology Stack
+ 
+### Backend
+- **Framework**: Spring Boot
+- **Language**: Java
+- **Database**: MongoDB
+- **Authentication**: JWT with Spring Security
+- **APIs**: RESTful services with Swagger documentation
+ 
+### Frontend
+- **Framework**: React with TypeScript
+- **State Management**: Redux
+- **Styling**: Tailwind CSS
+- **UI Components**: Material-UI
+- **RoadMap Components**: React Flow for visualizing learning paths
+ 
+## Getting Started
+ 
+### Prerequisites
+- Java 17+
+- Node.js 16+
+- MongoDB 5+\
+ 
+### Local Development Setup
+ 
+1. **Clone the repository**
+   ```bash
+   git clone https://git.garage.epam.com/panic-at-the-debug/panic-at-the-debug.git
+   cd pathsync
+   ```
+ 
+2. **Set up the backend**
+   ```bash
+   cd backend
+   ./mvnw spring-boot:run
+   ```
+ 
+3. **Set up the frontend**
+   ```bash
+   cd frontend
+   npm install
+   npm start
+   ```
+ 
+4. **Access the application**
+    - Frontend: http://localhost:3000
+    - Backend API: http://localhost:8080
+    - API Documentation: http://localhost:8080/swagger-ui.html
+ 
+ 
+## Architecture
+ 
+<details>
+<summary>System Architecture (Click to view)</summary>
+&nbsp;
+ 
+![System Architecture](./docs/images/architecture.png)
+*High-level overview of PathSync's system architecture*
+ 
+</details>
+ 
+<details>
+<summary>Assessment Flow (Click to view)</summary>
+&nbsp;
+ 
+![Assessment Flow](./docs/images/assessment-flow.png)
+*Detailed flow of the skill assessment process*
+ 
+</details>
+ 
+<details>
+<summary>Learning Path Generation (Click to view)</summary>
+&nbsp;
+ 
+![Learning Path Generation](./docs/images/path-generation.png)
+*How personalized learning paths are created*
+ 
+</details>
+ 
+## API Documentation
+ 
+PathSync provides a comprehensive API for integration with other learning systems:
+ 
+- **Authentication API**: User registration, login, and token management
+- **Assessment API**: Skill assessment and result analysis
+- **Learning Path API**: Generation and management of personalized learning paths
+- **Content API**: Access to learning resources and materials
+- **Progress API**: Tracking and reporting on user advancement
+ 
+Full API documentation is available at `/swagger-ui.html` when running the application.
+ 
 ## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+ 
+We welcome contributions from the community! Whether it's adding new features, improving documentation, or reporting bugs, your help makes PathSync better for everyone.
+ 
+See [`CONTRIBUTING.md`](docs/CONTRIBUTING.md) for ways to get started.
+ 
+Please adhere to this project's [`CODE_OF_CONDUCT.md`](docs/CODE_OF_CONDUCT.md).
+ 
+## Future Scope
+ 
+    - Enhanced content recommendation algorithm
+    - Integration with additional learning resource providers
+    - Improved progress analytics
+    - Peer learning and mentorship features
+    - Industry-specific learning paths
+    - Advanced skill certification options
+    - AI-powered learning assistant
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+ 
+## Our Team
+ 
+PathSync was created by a team of passionate developers and educators who believe in the power of personalized learning:
+ 
+- **Krishnendu Bose** - Backend Developer & Project Lead
+- **Shreyansh Rajesh Telrandhe** - Backend Developer
+- **Sidhant Guha** - Backend Developer
+- **Debarka Chakraborti** - UX/UI Designer & Frontend Developer
+ 
+## Acknowledgments
+ 
+- Thanks to all the content creators and educational platforms that provide valuable learning resources
+- Special appreciation to our early users who provided invaluable feedback
+- Gratitude to the open-source community for the tools that made this project possible
+ 
+[//]: # (## Contact)
+ 
+[//]: # ()
+[//]: # (- **Email**: team@pathsync.io)
+ 
+[//]: # (- **GitHub Issues**: For bug reports and feature requests)
+ 
+---
+ 
+<p align="center">
+<i>PathSync: Your journey to becoming a better developer starts here.</i>
+</p>
