@@ -23,7 +23,6 @@ export async function startAssessment(assessmentId: string) {
 }
 
 export async function submitAssessment(assessmentId: string) {
-    // console.log(answers);
   const response = await axiosInstance.post(`/assessments/${assessmentId}/complete`);
   return response.data;
 }
