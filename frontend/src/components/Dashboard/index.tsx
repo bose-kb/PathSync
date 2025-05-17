@@ -567,8 +567,8 @@ export default function Dashboard() {
 
         {/* Overview cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="col-span-full md:col-span-2">
-            <div className="flex flex-col md:flex-row justify-between">
+          <Card className="col-span-full md:col-span-2 ">
+            <div className="flex flex-col md:flex-row justify-between ">
               <div>
                 <h2 className="text-lg font-semibold text-gray-900 mb-2">
                   Overall Progress
@@ -739,7 +739,7 @@ export default function Dashboard() {
           </Card>
 
           <div className="space-y-6">
-            <Card>
+            {/* <Card>
               <h2 className="text-lg font-semibold text-gray-900 mb-4">
                 Learning Streak
               </h2>
@@ -769,7 +769,7 @@ export default function Dashboard() {
                   ))}
                 </div>
               </div>
-            </Card>
+            </Card> */}
 
             <Card>
               <h2 className="text-lg font-semibold text-gray-900 mb-4">

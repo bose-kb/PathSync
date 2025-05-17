@@ -8,6 +8,7 @@ const useDashboardData = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const[MajorSkills,setMajorSkills]=useState<[]>([]);
+  const[DashboardStart,setDashboardStart]=useState(null);
 
   const token = localStorage.getItem("accessToken");
   const headers = {
@@ -21,6 +22,10 @@ const useDashboardData = () => {
         setLoading(true);
         
         // Fetch dashboard metrics
+
+        const dashStart = await fetch("http://localhost:8080/learn-path/start", { headers });
+        const  dashBoardStart= await dashStart.json();
+
         const metricsResponse = await fetch("http://localhost:8080/user-progress/dashboard", { headers });
         const metricsData = await metricsResponse.json();
         
@@ -45,6 +50,7 @@ const useDashboardData = () => {
         setUpcomingTasks(upcomingData);
         setCompletedTasks(completedData);
         setMajorSkills(MainSkills);
+        setDashboardStart(dashBoardStart)
         
       } catch (err) {
         setError("Failed to load dashboard data. Please try again later.");
@@ -109,7 +115,8 @@ const useDashboardData = () => {
     loading,
     error,
     handleMarkComplete,
-    MajorSkills
+    MajorSkills,
+    DashboardStart
   };
 };
 

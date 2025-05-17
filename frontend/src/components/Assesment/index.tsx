@@ -1,25 +1,30 @@
-// src/pages/AssessmentPage.tsx
-
-import React, { useState, useEffect } from 'react';
-import { generateAssessment, startAssessment, submitAssessment } from '../../services/assesmentApi';
-import Navbar from './Navbar';
-import Toast from '../Toast';
-import { Question } from '../../types';
-import { useNavigate } from 'react-router-dom';
-import roadMapApi from '../../services/roadMapApi';
+import React, { useState, useEffect } from "react";
+import {
+  generateAssessment,
+  startAssessment,
+  submitAssessment,
+} from "../../services/assesmentApi";
+import Navbar from "./Navbar";
+import Toast from "../Toast";
+import { Question } from "../../types";
+import { useNavigate } from "react-router-dom";
+import roadMapApi from "../../services/roadMapApi";
 
 const AssessmentPage = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [assessmentId, setAssessmentId] = useState('');
+  const [assessmentId, setAssessmentId] = useState("");
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const navigate = useNavigate();
 
-  const [toast, setToast] = useState<{ message: string; status: 'success' | 'error' | null }>({
-    message: '',
+  const [toast, setToast] = useState<{
+    message: string;
+    status: "success" | "error" | null;
+  }>({
+    message: "",
     status: null,
   });
 
@@ -33,10 +38,10 @@ const AssessmentPage = () => {
         setTimeRemaining(data.timeRemainingSeconds || 900);
       } catch (error) {
         setToast({
-          message: 'Failed to fetch assessment. Please try again later.',
-          status: 'error',
+          message: "Failed to fetch assessment. Please try again later.",
+          status: "error",
         });
-        console.error('Error fetching assessment:', error);
+        console.error("Error fetching assessment:", error);
       } finally {
         setIsLoading(false);
       }
@@ -72,10 +77,10 @@ const AssessmentPage = () => {
       setTimeRemaining(data.timeRemainingSeconds || 1500);
     } catch (error) {
       setToast({
-        message: 'Failed to start the assessment. Please try again later.',
-        status: 'error',
+        message: "Failed to start the assessment. Please try again later.",
+        status: "error",
       });
-      console.error('Error starting assessment:', error);
+      console.error("Error starting assessment:", error);
     } finally {
       setIsLoading(false);
     }
@@ -87,27 +92,27 @@ const AssessmentPage = () => {
       const result = await submitAssessment(assessmentId);
       setIsSubmitted(true);
       setToast({
-        message: 'Assessment submitted successfully.',
-        status: 'success',
+        message: "Assessment submitted successfully.",
+        status: "success",
       });
 
       console.log(result);
       const questionResults = result.questionResults;
-      await roadMapApi.createLearningPath({questionResults: questionResults});
-      navigate('/roadmap');
+      await roadMapApi.createLearningPath({ questionResults: questionResults });      
+      navigate("/dashboard");
     } catch (error) {
       setToast({
-        message: 'Failed to submit the assessment. Please try again later.',
-        status: 'error',
+        message: "Failed to submit the assessment. Please try again later.",
+        status: "error",
       });
-      console.error('Error submitting assessment:', error);
+      console.error("Error submitting assessment:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-
-  const isAssessmentValid = questions.length > 0 && questions.every((q) => answers[q.id]);
+  const isAssessmentValid =
+    questions.length > 0 && questions.every((q) => answers[q.id]);
 
   return (
     <div className="relative min-h-screen flex flex-col">
@@ -119,7 +124,7 @@ const AssessmentPage = () => {
             <Toast
               message={toast.message}
               status={toast.status}
-              onClose={() => setToast({ message: '', status: null })}
+              onClose={() => setToast({ message: "", status: null })}
             />
           )}
 
@@ -130,7 +135,9 @@ const AssessmentPage = () => {
                 alt="Loading..."
                 className="h-48 w-auto"
               />
-              <p className="mt-4 text-lg font-medium text-gray-600">Loading, Please wait</p>
+              <p className="mt-4 text-lg font-medium text-gray-600">
+                Loading, Please wait
+              </p>
             </div>
           ) : isSubmitted ? (
             <div className="text-center">
@@ -138,7 +145,9 @@ const AssessmentPage = () => {
               <p className="text-gray-800 mb-6">
                 Your assessment was submitted successfully.
               </p>
-              <p className="text-sm text-gray-600">Check your personalized learning path!</p>
+              <p className="text-sm text-gray-600">
+                Check your personalized learning path!
+              </p>
             </div>
           ) : (
             <div>
@@ -154,10 +163,14 @@ const AssessmentPage = () => {
                 </div>
               ) : (
                 <>
-                  <h2 className="text-2xl font-medium mb-6">Assessment Questions</h2>
+                  <h2 className="text-2xl font-medium mb-6">
+                    Assessment Questions
+                  </h2>
                   {questions.map((question) => (
                     <div key={question.id} className="mb-4">
-                      <h3 className="text-lg mb-3 font-medium">{question.text}</h3>
+                      <h3 className="text-lg mb-3 font-medium">
+                        {question.text}
+                      </h3>
                       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                         {question.options.map((option, index) => (
                           <label
@@ -167,8 +180,15 @@ const AssessmentPage = () => {
                             <input
                               type="radio"
                               value={index.toString()}
-                              checked={answers[question.id] === index.toString()}
-                              onChange={() => handleAnswerChange(question.id, index.toString())}
+                              checked={
+                                answers[question.id] === index.toString()
+                              }
+                              onChange={() =>
+                                handleAnswerChange(
+                                  question.id,
+                                  index.toString()
+                                )
+                              }
                               className="form-radio h-5 w-5 text-indigo-600"
                             />
                             <span>{option}</span>
@@ -180,10 +200,11 @@ const AssessmentPage = () => {
                   <button
                     onClick={handleSubmit}
                     disabled={!isAssessmentValid}
-                    className={`w-full py-3 mt-6 rounded-md transition-colors ${isAssessmentValid
-                      ? 'bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer'
-                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                      }`}
+                    className={`w-full py-3 mt-6 rounded-md transition-colors ${
+                      isAssessmentValid
+                        ? "bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer"
+                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    }`}
                   >
                     Submit Assessment
                   </button>
