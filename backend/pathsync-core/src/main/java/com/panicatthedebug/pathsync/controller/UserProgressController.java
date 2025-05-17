@@ -82,7 +82,7 @@ public class UserProgressController {
      *
      * @return A response entity with the list of pending tasks.
      */
-    @GetMapping("/{userEmail}/pending-tasks")
+    @GetMapping("/pending-tasks")
     public ResponseEntity<List<UserProgress.ProgressEntry>> getPendingTasks(Authentication authentication) {
         List<UserProgress.ProgressEntry> pendingTasks = userProgressService.getPendingTasks(authentication.getName());
         return ResponseEntity.ok(pendingTasks);
