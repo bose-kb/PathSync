@@ -347,7 +347,7 @@ public class AssessmentService {
      * @return A map containing the proficiency level for each topic.
      * @throws QuestionNotFoundException if a question ID is not found in the database.
      */
-    public Map<String, String> getProficiencyByTopic(Map<String, String> questionOutcomes) throws QuestionNotFoundException {
-        return analyzeTestResults(questionOutcomes);
+    public Map<String, String> getProficiencyByTopic(Map<String, Map<String, String>> questionOutcomes) throws QuestionNotFoundException {
+        return analyzeTestResults(questionOutcomes.get("questionResults"));
     }
 }
