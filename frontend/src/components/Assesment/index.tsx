@@ -154,7 +154,7 @@ const AssessmentPage = () => {
           )}
 
           {isLoading ? (
-            <div className="flex justify-center items-center py-12">
+            <div className="flex flex-col justify-center items-center py-12">
               <img
                 src="https://media.giphy.com/media/Qrca6tBIdqXYXhnB4v/giphy.gif"
                 alt="Loading..."

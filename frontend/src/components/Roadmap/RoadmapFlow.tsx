@@ -5,11 +5,10 @@ import ReactFlow, {
   Background,
   useNodesState,
   useEdgesState,
-  Node,
-  Edge,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import roadMapApi from '../../services/roadMapApi'; // Import the roadMapApi service
+import Navbar from '../Navbar';
 
 const RoadmapFlow = () => {
   const [learningPath, setLearningPath] = useState(null);
@@ -253,6 +252,7 @@ const RoadmapFlow = () => {
 
   return (
     <div className="h-screen w-full">
+      <Navbar isLoggedIn />
       <ReactFlow 
         nodes={nodes} 
         edges={edges} 
