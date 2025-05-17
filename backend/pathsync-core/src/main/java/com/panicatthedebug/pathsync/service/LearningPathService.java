@@ -7,8 +7,10 @@ import com.panicatthedebug.pathsync.exception.SurveyNotCompleteException;
 import com.panicatthedebug.pathsync.model.CustomLearningPath;
 import com.panicatthedebug.pathsync.model.StandardLearningPath;
 import com.panicatthedebug.pathsync.model.User;
+import com.panicatthedebug.pathsync.model.UserProgress;
 import com.panicatthedebug.pathsync.repository.CustomLearningPathRepository;
 import com.panicatthedebug.pathsync.repository.StandardLearningPathRepository;
+import com.panicatthedebug.pathsync.repository.UserProgressRepository;
 import net.minidev.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,8 @@ import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,13 +30,15 @@ public class LearningPathService {
     private final ChatClient chatClient;
     private final StandardLearningPathRepository standardLearningPathRepository;
     private final CustomLearningPathRepository customLearningPathRepository;
+    private final UserProgressRepository userProgressRepository;
     private final ObjectMapper objectMapper;
     private final Logger logger;
 
-    public LearningPathService(ChatClient chatClient, StandardLearningPathRepository standardLearningPathRepository, CustomLearningPathRepository customLearningPathRepository) {
+    public LearningPathService(ChatClient chatClient, StandardLearningPathRepository standardLearningPathRepository, CustomLearningPathRepository customLearningPathRepository, UserProgressRepository userProgressRepository) {
         this.chatClient = chatClient;
         this.standardLearningPathRepository = standardLearningPathRepository;
         this.customLearningPathRepository = customLearningPathRepository;
+        this.userProgressRepository = userProgressRepository;
         this.logger = LoggerFactory.getLogger(LearningPathService.class);
         this.objectMapper = new ObjectMapper();
     }
@@ -177,5 +183,46 @@ public class LearningPathService {
         if (customLearningPathRepository.existsById(name)) {
             throw new LearnPathAlreadyExistsException("Custom learn path with this id already exists.");
         }
+    }
+
+    /**
+     * Starts the learning path for a user by populating the progress tracking table.
+     *
+     * @param userEmail       The user's email.
+     */
+    public void startLearningPath(String userEmail) {
+        CustomLearningPath customLearningPath = customLearningPathRepository.findById(userEmail)
+                .orElseThrow(() -> new RuntimeException("Learning path not found"));
+
+        List<UserProgress.ProgressEntry> progressEntries = new ArrayList<>();
+        for (Map.Entry<String, CustomLearningPath.Topic> topicEntry : customLearningPath.getTopics().entrySet()) {
+            String topicName = topicEntry.getKey();
+            CustomLearningPath.Topic topic = topicEntry.getValue();
+
+            for (Map.Entry<String, CustomLearningPath.SubTopic> subTopicEntry : topic.getSubTopics().entrySet()) {
+                String subTopicName = subTopicEntry.getKey();
+                CustomLearningPath.SubTopic subTopic = subTopicEntry.getValue();
+
+                int durationInHours = Integer.parseInt(subTopic.getDuration().replace(" hours", ""));
+                int daysRequired = (int) Math.ceil((double) durationInHours / 6);
+                String estimatedCompletionDate = LocalDate.now().plusDays(daysRequired).toString();
+
+                progressEntries.add(new UserProgress.ProgressEntry(
+                        topicName,
+                        subTopicName,
+                        estimatedCompletionDate,
+                        false,
+                        subTopic.getDuration()
+                ));
+            }
+        }
+
+        // Save the progress entries to the database
+        UserProgress userProgress = new UserProgress(
+                userEmail,
+                progressEntries,
+                0
+        );
+        userProgressRepository.save(userProgress);
     }
 }
