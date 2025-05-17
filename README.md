@@ -1,17 +1,17 @@
 # PathSync: Your Personalized Campus to Career Learning Path
  
-<p align="center">
+<div style="text-align: center;">
+
+<img src="docs/assets/images/pathsync-logo-light.png" alt="PathSync Logo" width="50%" height="50%" />
+
+</div>
  
-[//]: # (  <img src="./docs/images/pathsync-logo-dark.png#gh-dark-mode-only" alt="PathSync Logo" />)
-<img src="./docs/images/pathsync-logo-light.png" alt="PathSync Logo" width="100%" height="50%" />
-</p>
- 
-<div align="center">
- 
-[![Version Info](https://img.shields.io/badge/Current_Version-1.0.0-blue.svg)](https://github.com/pathsync-team/pathsync/releases)
-[![Built with](https://img.shields.io/badge/Built_with-Spring_Boot-green.svg)](https://spring.io/projects/spring-boot)
-[![Frontend](https://img.shields.io/badge/Frontend-React-61dafb.svg)](https://reactjs.org/)
-[![Database](https://img.shields.io/badge/Database-MongoDB-4DB33D.svg)](https://www.mongodb.com/)
+<div style="text-align: center;">
+
+![Version Info](./docs/assets/badges/version.svg)
+![Built with Spring Boot](./docs/assets/badges/spring-boot.svg)
+![Frontend React](./docs/assets/badges/react.svg)
+![Database MongoDB](./docs/assets/badges/mongodb.svg)
  
 </div>
  
@@ -79,7 +79,6 @@ Your learning path evolves as you grow:
  
 ### Frontend
 - **Framework**: React with TypeScript
-- **State Management**: Redux
 - **Styling**: Tailwind CSS
 - **UI Components**: Material-UI
 - **RoadMap Components**: React Flow for visualizing learning paths
@@ -124,7 +123,7 @@ PathSync is built on a microservices architecture, ensuring scalability and main
 <summary>Assessment Flow (Click to view)</summary>
 &nbsp;
  
-![Assessment Flow](./docs/images/assessment-flow.png)
+![Assessment Flow](./docs/assets/images/assessment-flow.png)
 *Detailed flow of the skill assessment process*
  
 </details>
@@ -180,8 +179,9 @@ PathSync was created by a team of passionate developers and educators who believ
 [//]: # (- **Email**: team@pathsync.io)
  
 [//]: # (- **GitHub Issues**: For bug reports and feature requests)
+
 ---
  
 <p align="center">
-<i>PathSync: Your journey to becoming a better developer starts here.</i>
+   <i>PathSync: Your journey to becoming a better developer starts here.</i>
 </p>
