@@ -602,6 +602,23 @@ export default function Dashboard() {
                     </span>
                   </div>
                 </div>
+                
+<div>
+{MajorSkills && MajorSkills.length > 0 && (
+        <div className="space-y-2">
+          <div className="flex flex-wrap mt-4">
+            {MajorSkills.map((skill, index) => (
+              <div
+                key={index}
+                className="inline-block bg-blue-100 text-blue-700 border border-blue-700 px-2 py-1 text-sm rounded-md m-1"
+              >
+                {skill}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
               </div>
               <div className="mt-6 md:mt-0">
                 <div className="w-32 h-32 md:w-40 md:h-40 relative">
@@ -771,7 +788,7 @@ export default function Dashboard() {
               </div>
             </Card> */}
 
-            <Card>
+            {/* <Card>
               <h2 className="text-lg font-semibold text-gray-900 mb-4">
                 Skill Progress
               </h2>
@@ -785,7 +802,7 @@ export default function Dashboard() {
                   </div>
                 ))}
               </div>
-            </Card>
+            </Card> */}
 
             <Card>
               <div className="flex items-center justify-between mb-4">
