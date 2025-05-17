@@ -1,10 +1,9 @@
-// src/services/roadMapApi.js
-import { AxiosRequestConfig } from 'axios';
+// import { AxiosRequestConfig } from 'axios';
 import axiosInstance from './api';
-
+ 
 /**
- * API functions for learning path operations
- */
+* API functions for learning path operations
+*/
 const roadMapApi = {
   /**
    * Fetch the user's custom learning path
@@ -14,7 +13,6 @@ const roadMapApi = {
     console.log("Getting learn path");
     return axiosInstance.get('/learn-path/fetch');
   },
-  
   /**
    * Create a custom learning path based on assessment results
    * @param {Object} questionOutcomes - The assessment results
@@ -24,7 +22,6 @@ const roadMapApi = {
     console.log(questionResults);
     return axiosInstance.post('/learn-path/create', questionResults );
   },
-  
   /**
    * Update the completion status of a subtopic
    * @param {string} topic - The main topic name
@@ -39,7 +36,6 @@ const roadMapApi = {
       completionStatus
     });
   },
-  
   /**
    * Check if a user has a learning path
    * @returns {Promise} Promise object representing the API response
@@ -55,7 +51,6 @@ const roadMapApi = {
       throw error;
     }
   },
-  
   /**
    * Get learning path statistics
    * @returns {Promise} Promise object representing the API response with statistics
@@ -64,5 +59,5 @@ const roadMapApi = {
     return axiosInstance.get('/learn-path/stats');
   }
 };
-
+ 
 export default roadMapApi;

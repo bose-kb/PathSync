@@ -7,6 +7,7 @@ import Toast from "../components/Toast";
 import Popup from "../components/Popup"; // Import Popup Component
 
 const Login: React.FC = () => {
+  // localStorage.clear();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
