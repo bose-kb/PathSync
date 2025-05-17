@@ -29,6 +29,11 @@ PathSync is an intelligent learning platform designed to help developers at all 
  
 ## Screenshots
  
+ ![DashBoard](./docs/assets/images/dashboard.png)
+*User dashboard for easy navigation*
+
+![Customized Learn Path](./docs/assets/images/learn-path.png)
+*Customized learn path generated for the user along with chatbot for easy question answering*
  
 ## How It Works
  
@@ -47,18 +52,6 @@ Based on your assessment results, PathSync creates a customized learning journey
 - **Topic Prioritization**: Focus on the skills most relevant to your goals and current gaps
 - **Difficulty Calibration**: Content difficulty matched to your proficiency level
 - **Learning Style Adaptation**: Resources aligned with your preferred learning methods
- 
-[//]: # (### 3. Guided Learning Experience)
- 
-[//]: # ()
-[//]: # (Follow your personalized path with structured support:)
- 
-[//]: # ()
-[//]: # (- **Step-by-Step Progression**: Clear sequence of topics and resources)
- 
-[//]: # (- **Interactive Challenges**: Apply your knowledge with coding exercises and projects)
- 
-[//]: # (- **Regular Checkpoints**: Validate your understanding with quizzes and assessments)
  
 ### 4. Continuous Improvement
  
@@ -88,7 +81,7 @@ Your learning path evolves as you grow:
 ### Prerequisites
 - Java 17+
 - Node.js 16+
-- MongoDB 5+\
+- MongoDB 5+
  
 ### Local Development Setup
  
@@ -113,7 +106,7 @@ Your learning path evolves as you grow:
  
 4. **Access the application**
    - Frontend: http://localhost:5173
-   - Backend API: http://localhost:8080
+   - Backend API: http://localhost:8080/swagger-ui.html
  
  
 ## Architecture
