@@ -1,17 +1,17 @@
 # PathSync: Your Personalized Campus to Career Learning Path
  
-<p align="center">
+<div style="text-align: center;">
+
+<img src="docs/assets/images/pathsync-logo-light.png" alt="PathSync Logo" width="50%" height="50%" />
+
+</div>
  
-[//]: # (  <img src="./docs/images/pathsync-logo-dark.png#gh-dark-mode-only" alt="PathSync Logo" />)
-<img src="./docs/images/pathsync-logo-light.png" alt="PathSync Logo" width="50%" height="50%" />
-</p>
- 
-<div align="center">
- 
-![Version Info](assets/badges/version.svg)
-![Built with Spring Boot](assets/badges/spring-boot.svg)
-![Frontend React](assets/badges/react.svg)
-![Database MongoDB](assets/badges/mongodb.svg)
+<div style="text-align: center;">
+
+![Version Info](./docs/assets/badges/version.svg)
+![Built with Spring Boot](./docs/assets/badges/spring-boot.svg)
+![Frontend React](./docs/assets/badges/react.svg)
+![Database MongoDB](./docs/assets/badges/mongodb.svg)
  
 </div>
  
