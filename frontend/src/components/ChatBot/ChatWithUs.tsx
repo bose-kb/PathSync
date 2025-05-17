@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import React, { useEffect, useRef, useState } from "react";
 
 interface Provider {
@@ -108,7 +109,7 @@ const ChatWithUs: React.FC = () => {
       <button
         id="openChatButton"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="bg-blue-600 text-black px-4 py-2 rounded-lg shadow-lg"
+        className="bg-[#6FE6FC] text-black px-4 py-2 rounded-lg shadow-lg"
       >
         <img
         src="/assets/chat.png"
@@ -120,13 +121,13 @@ const ChatWithUs: React.FC = () => {
       {isOpen && (
         <div
           id="chatWithUs"
-          className="w-[350px] h-[500px] bg-white shadow-lg rounded-lg mt-2 flex flex-col overflow-hidden"
+          className="w-[350px] h-[500px] bg-blue-200 shadow-lg rounded-lg mt-2 flex flex-col overflow-hidden"
         >
           <div className="flex justify-between items-center p-3 border-b">
-            <h2 className="font-bold text-lg">PathSync AI</h2>
+            <h2 className="font-bold text-lg text-black">PathSync AI</h2>
             <select
               id="chatProviderSelect"
-              className="ml-auto text-sm border rounded px-2 py-1"
+              className="ml-auto text-sm border rounded px-2 py-1 border-black text-black"
               onChange={(e) => handleProviderChange(e.target.value)}
               value={config?.chatProvider}
             >
@@ -141,18 +142,18 @@ const ChatWithUs: React.FC = () => {
 
           <div
             id="chatMessages"
-            className="flex-1 flex flex-col space-y-2 p-3 overflow-y-auto bg-gray-50"
+            className="flex-1 flex flex-col space-y-2 p-3 overflow-y-auto bg-gray-200"
           >
             {chatHistory.map((msg, idx) => (
               <div
                 key={idx}
                 className={`${
                   msg.role === "user"
-                    ? "self-end bg-gray-200 text-right"
-                    : "self-start bg-blue-100 text-left"
+                    ? "self-end bg-gray-400 text-right"
+                    : "self-start bg-blue-300 text-left"
                 } p-2 rounded-lg max-w-[75%]`}
               >
-                <span className="font-medium text-gray-700">
+                <span className="font-medium text-black">
                   {msg.role === "user" ? "You" : "Bot"}:
                 </span>{" "}
                 <span dangerouslySetInnerHTML={{ __html: formatMarkdown(msg.content) }} />
@@ -170,7 +171,7 @@ const ChatWithUs: React.FC = () => {
           <div className="p-3 border-t flex items-center">
             <textarea
   id="chatInput"
-  className="flex-1 border rounded p-2 resize-none text-sm"
+  className="flex-1 border rounded p-2 resize-none text-sm text-black"
   value={input}
   onChange={(e) => setInput(e.target.value)}
   placeholder="Type your message..."
@@ -179,7 +180,7 @@ const ChatWithUs: React.FC = () => {
 <button
   id="sendMessageBtn"
   onClick={handleSend}
-  className={`ml-2 bg-blue-600 text-black px-3 py-2 rounded ${
+  className={`ml-2 bg-blue-400 text-black px-3 py-2 rounded ${
     isSending || !config ? "opacity-50 cursor-not-allowed" : ""
   }`}
   disabled={isSending || !config}

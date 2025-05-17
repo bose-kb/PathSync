@@ -8,11 +8,14 @@ import Assessment from './components/Assesment';
 import Home from './components/Home';
 import LoggedInHome from './components/LoggedInHome';
 import Dashboard from './components/Dashboard';
+// import Wellbeing from './components/Wellbeing';
+
 
 const App: React.FC = () => {
   return (
     <Router>
       <div className="min-h-screen bg-gray-50">
+        {/* <Wellbeing /> */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
