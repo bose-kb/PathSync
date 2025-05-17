@@ -59,7 +59,7 @@ public class LearningPathController {
      */
     @GetMapping("/create")
     public ResponseEntity<CustomLearningPath> createCustomLearningPath(Authentication authentication,
-                                                                       @RequestBody Map<String, String> questionOutcomes) throws UserNotFoundException, QuestionNotFoundException, SurveyNotCompleteException, LearnPathAlreadyExistsException {
+                                                                       @RequestBody Map<String, Map<String, String>> questionOutcomes) throws UserNotFoundException, QuestionNotFoundException, SurveyNotCompleteException, LearnPathAlreadyExistsException {
         learningPathService.checkCustomLearnPathAlreadyExists(authentication.getName());
         Map<String, String> proficiencyByTopic = assessmentService.getProficiencyByTopic(questionOutcomes);
         return ResponseEntity.ok(learningPathService.createCustomLearningPath(userService
