@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axiosInstance from "../../services/api";
 import Button from "./Button";
+import Toast from "../Toast"; // import Toast component
 
 const FileUpload = ({ onFileSelect }: { onFileSelect: (file: File) => void }) => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -30,6 +31,10 @@ const FileUpload = ({ onFileSelect }: { onFileSelect: (file: File) => void }) =>
 
 const Popup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [toast, setToast] = useState<{
+    message: string;
+    status: "success" | "error";
+  } | null>(null);
 
   const handleSurveyClick = () => {
     window.location.href = "/survey";
@@ -48,33 +53,56 @@ const Popup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       });
 
       console.log("Resume parsed successfully:", response.data);
-      alert("Resume uploaded and parsed successfully!");
+
+      // Show success toast instead of alert
+      setToast({
+        message: "Resume uploaded and parsed successfully!",
+        status: "success",
+      });
 
       setIsLoading(false);
+
+      // Redirect to survey after 2.3s (when toast disappears)
+      setTimeout(() => {
+        window.location.href = "/survey";
+      }, 2300);
     } catch (error) {
       console.error("Resume upload failed:", error);
-      alert("Failed to upload resume. Please try again.");
+      setToast({
+        message: "Failed to upload resume. Please try again.",
+        status: "error",
+      });
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg p-6 shadow-lg max-w-md w-full">
-        <h2 className="text-lg font-bold text-center mb-4">Choose an Action</h2>
-        <div className="flex flex-col space-y-4">
-          <Button variant="primary" onClick={handleSurveyClick}>
-            Take the Survey
-          </Button>
-          <div className="flex items-center justify-center">
-            <div className="border-t border-gray-300 w-full"></div>
-            <span className="px-4 text-gray-500 text-sm">or</span>
-            <div className="border-t border-gray-300 w-full"></div>
+    <>
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
+        <div className="bg-white rounded-lg p-6 shadow-lg max-w-md w-full">
+          <h2 className="text-lg font-bold text-center mb-4">Choose an Action</h2>
+          <div className="flex flex-col space-y-4">
+            <Button variant="primary" onClick={handleSurveyClick}>
+              Take the Survey
+            </Button>
+            <div className="flex items-center justify-center">
+              <div className="border-t border-gray-300 w-full"></div>
+              <span className="px-4 text-gray-500 text-sm">or</span>
+              <div className="border-t border-gray-300 w-full"></div>
+            </div>
+            <FileUpload onFileSelect={handleFileUpload} />
           </div>
-          <FileUpload onFileSelect={handleFileUpload} />
         </div>
       </div>
-    </div>
+
+      {toast && (
+        <Toast
+          message={toast.message}
+          status={toast.status}
+          onClose={() => setToast(null)}
+        />
+      )}
+    </>
   );
 };
 

@@ -1,8 +1,7 @@
-import axios from 'axios';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axiosInstance from './api';
  
 // Replace this with your actual token fetching logic
-const getToken = () => localStorage.getItem('token');
  
  
 export async function generateAssessment() {
