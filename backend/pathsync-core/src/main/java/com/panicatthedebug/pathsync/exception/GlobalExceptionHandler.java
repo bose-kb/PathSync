@@ -40,6 +40,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             LearnPathAlreadyExistsException.class
     })
     public ResponseEntity<Object> handleBadRequest(Exception e, WebRequest webRequest) {
+        System.out.println(e.getMessage());
         return handleExceptionInternal(e, Map.of(MESSAGE, e.getMessage()),
                 new HttpHeaders(),
                 HttpStatus.BAD_REQUEST,

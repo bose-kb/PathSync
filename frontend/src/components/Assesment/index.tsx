@@ -92,18 +92,28 @@ const AssessmentPage = () => {
     });
 
     console.log(result);
-    // Transform into questionResults format
-    // const questionResults: Record<string, 'CORRECT' | 'INCORRECT'> = {};
-    // questions.forEach((q) => {
-    //   questionResults[q.id] =
-    //     answers[q.id] === q.correctOption ? 'CORRECT' : 'INCORRECT';
+    // const {questionResults}=result;
+ const questionResults={
+  "6826f4e7183ccfa0abc0821d": "INCORRECT",
+  "6826f4e7183ccfa0abc08220": "INCORRECT",
+  "6826f4e7183ccfa0abc08227": "INCORRECT",
+  "6826f4e7183ccfa0abc08229": "INCORRECT",
+  "682701d6183ccfa0abc082a4": "INCORRECT",
+  "682701d6183ccfa0abc0829d": "INCORRECT",
+  "682701d6183ccfa0abc0829e": "INCORRECT",
+  "682701d6183ccfa0abc08297": "INCORRECT",
+  "682703b9183ccfa0abc082bb": "INCORRECT",
+  "682703b9183ccfa0abc082bd": "INCORRECT"
+}
 
-    // Now call the learning path generation API
-    const {questionResults}=result;
+const payload = {
+  questionResults
+};
 
-        console.log("Sending this",{questionResults});
+        console.log("Sending this",payload);
 
-    await roadMapApi.createLearningPath({ questionResults });
+    await roadMapApi.createLearningPath( payload );
+    // await roadMapApi.createLearningPath( {questionResults} );
     navigate('/roadmap');
   } catch (error) {
     setToast({
