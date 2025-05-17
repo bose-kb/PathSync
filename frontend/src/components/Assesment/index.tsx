@@ -1,57 +1,61 @@
-import { useState, useEffect } from 'react';
-import { getAssessment, submitAssessment } from '../../services/assesmentApi';
-import Toast from '../Toast';
-import Navbar from './Navbar'; // Navbar with countdown timer
-import { Question } from '../../schema/QuestionSchema';
+// src/pages/AssessmentPage.tsx
 
-const Assessment = () => {
+import React, { useState, useEffect } from 'react';
+import { generateAssessment, startAssessment, submitAssessment } from '../../services/assesmentApi';
+import Navbar from './Navbar';
+import Toast from '../Toast';
+import { Question } from '../../types';
+import { useNavigate } from 'react-router-dom';
+import roadMapApi from '../../services/roadMapApi';
+
+const AssessmentPage = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [assessmentId, setAssessmentId] = useState('');
+  const [timeRemaining, setTimeRemaining] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [timeRemaining, setTimeRemaining] = useState(900); // 15 minutes in seconds
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
+  const navigate=useNavigate();
 
   const [toast, setToast] = useState<{ message: string; status: 'success' | 'error' | null }>({
     message: '',
     status: null,
   });
 
-  // Fetch assessment data
+  // Fetch and initialize the assessment
   useEffect(() => {
-    getAssessment()
-      .then((data) => {
-        setQuestions(data.questions);
+    const fetchAssessment = async () => {
+      try {
+        const data = await generateAssessment();
         setAssessmentId(data.id);
-        setIsLoading(false);
-      })
-      .catch((error) => {
+        setQuestions(data.questions);
+        setTimeRemaining(data.timeRemainingSeconds || 900);
+      } catch (error) {
+        setToast({
+          message: 'Failed to fetch assessment. Please try again later.',
+          status: 'error',
+        });
         console.error('Error fetching assessment:', error);
-        setToast({ message: 'Failed to fetch assessment. Please try again later.', status: 'error' });
-      });
-  }, []);
-
-  // Countdown Timer
-  useEffect(() => {
-    if (timeRemaining > 0) {
-      const timer = setInterval(() => setTimeRemaining((prev) => prev - 1), 1000);
-      return () => clearInterval(timer);
-    } else {
-      handleAutoSubmit(); // Auto-submit when the timer reaches 0
-    }
-  }, [timeRemaining]);
-
-  // Restrict tab switching
-  useEffect(() => {
-    const handleTabSwitch = () => handleAutoSubmit(); // Auto-submit on tab switch
-
-    window.addEventListener('blur', handleTabSwitch); // Detect tab switch
-    return () => {
-      window.removeEventListener('blur', handleTabSwitch); // Cleanup event listener
+      } finally {
+        setIsLoading(false);
+      }
     };
+
+    fetchAssessment();
   }, []);
 
-  // Handle answer selection
+  // Countdown timer
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (hasStarted && timeRemaining > 0) {
+      timer = setInterval(() => setTimeRemaining((prev) => prev - 1), 1000);
+    } else if (hasStarted && timeRemaining <= 0 && !isSubmitted) {
+      handleSubmit();
+    }
+    return () => clearInterval(timer);
+  }, [timeRemaining, hasStarted, isSubmitted]);
+
   const handleAnswerChange = (questionId: string, selectedOption: string) => {
     setAnswers((prev) => ({
       ...prev,
@@ -59,31 +63,45 @@ const Assessment = () => {
     }));
   };
 
-  // Handle manual submission
-  const handleSubmit = () => {
-    submitAssessment(assessmentId, answers)
-      .then(() => {
-        setIsSubmitted(true);
-        setToast({ message: 'Assessment submitted successfully.', status: 'success' });
-      })
-      .catch((error) => {
-        console.error('Error submitting assessment:', error);
-        setToast({ message: 'Failed to submit assessment. Please try again later.', status: 'error' });
+  const handleStart = async () => {
+    setIsLoading(true);
+    try {
+      const data = await startAssessment(assessmentId);
+      setHasStarted(true);
+      setQuestions(data.questions);
+      setTimeRemaining(data.timeRemainingSeconds || 1500);
+    } catch (error) {
+      setToast({
+        message: 'Failed to start the assessment. Please try again later.',
+        status: 'error',
       });
+      console.error('Error starting assessment:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  // Auto-submit the assessment on timeout or tab switch
-  const handleAutoSubmit = () => {
-    if (!isSubmitted) {
-      submitAssessment(assessmentId, answers)
-        .then(() => {
-          setIsSubmitted(true);
-          setToast({ message: 'Assessment auto-submitted due to timeout or tab switch.', status: 'success' });
-        })
-        .catch((error) => {
-          console.error('Error submitting assessment:', error);
-          setToast({ message: 'Failed to auto-submit the assessment.', status: 'error' });
-        });
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    try {
+      const result = await submitAssessment(assessmentId, answers);
+      setIsSubmitted(true);
+      setToast({
+        message: `Assessment submitted successfully.`,
+        status: 'success',
+      });
+
+      console.log(answers);
+      await roadMapApi.createLearningPath(answers);
+      navigate('/roadmap');
+    } catch (error) {
+      setToast({
+        message: 'Failed to submit the assessment. Please try again later.',
+        status: 'error',
+      });
+      console.error('Error submitting assessment:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -91,11 +109,10 @@ const Assessment = () => {
 
   return (
     <div className="relative min-h-screen flex flex-col">
-      <Navbar timeRemaining={timeRemaining} />
+      <Navbar timeRemaining={hasStarted ? timeRemaining : null} />
 
       <div className="flex-1 flex items-center justify-center">
-        <div className="relative z-10 w-full max-w-2xl p-6 brightness-115 backdrop-blur-3xl rounded-lg shadow-lg mx-4">
-          {/* Toast Component */}
+        <div className="relative z-10 w-full max-w-2xl p-6 backdrop-blur-3xl rounded-lg shadow-lg mx-4">
           {toast.status && (
             <Toast
               message={toast.message}
@@ -106,49 +123,71 @@ const Assessment = () => {
 
           {isLoading ? (
             <div className="flex justify-center items-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+              <img
+                src="https://media.giphy.com/media/Qrca6tBIdqXYXhnB4v/giphy.gif"
+                alt="Loading..."
+                className="h-48 w-auto"
+              />
+              <p className="mt-4 text-lg font-medium text-gray-600">Loading, Please wait</p>
             </div>
           ) : isSubmitted ? (
             <div className="text-center">
               <h2 className="text-2xl font-medium mb-6">Thank You!</h2>
-              <p className="text-gray-800 mb-6">Your assessment has been submitted successfully.</p>
+              <p className="text-gray-800 mb-6">
+                Your assessment was submitted successfully.
+              </p>
+              <p className="text-sm text-gray-600">Check your personalized learning path!</p>
             </div>
           ) : (
             <div>
-              <h2 className="text-2xl font-medium mb-6">Answer the Questions</h2>
-              {/* Questions */}
-              {questions.map((question) => (
-                <div key={question.id} className="mb-4">
-                  <h3 className="text-lg mb-3 font-medium">{question.text}</h3>
-                  <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                    {question.options.map((option, index) => (
-                      <label key={index} className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded-lg border">
-                        <input
-                          type="radio"
-                          value={index.toString()}
-                          checked={answers[question.id] === index.toString()}
-                          onChange={() => handleAnswerChange(question.id, index.toString())}
-                          className="form-radio h-5 w-5 text-indigo-600"
-                        />
-                        <span>{option}</span>
-                      </label>
-                    ))}
-                  </div>
+              {!hasStarted ? (
+                <div className="text-center">
+                  <h2 className="text-2xl font-medium mb-6">Ready to Start?</h2>
+                  <button
+                    onClick={handleStart}
+                    className="w-full py-3 mt-6 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
+                  >
+                    Start Assessment
+                  </button>
                 </div>
-              ))}
-
-              {/* Submit Button */}
-              <button
-                onClick={handleSubmit}
-                disabled={!isAssessmentValid}
-                className={`w-full py-3 mt-6 rounded-md transition-colors ${
-                  isAssessmentValid
-                    ? 'bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer'
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                }`}
-              >
-                Submit Assessment
-              </button>
+              ) : (
+                <>
+                  <h2 className="text-2xl font-medium mb-6">Assessment Questions</h2>
+                  {questions.map((question) => (
+                    <div key={question.id} className="mb-4">
+                      <h3 className="text-lg mb-3 font-medium">{question.text}</h3>
+                      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                        {question.options.map((option, index) => (
+                          <label
+                            key={index}
+                            className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded-lg border"
+                          >
+                            <input
+                              type="radio"
+                              value={index.toString()}
+                              checked={answers[question.id] === index.toString()}
+                              onChange={() => handleAnswerChange(question.id, index.toString())}
+                              className="form-radio h-5 w-5 text-indigo-600"
+                            />
+                            <span>{option}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                  <button
+                    onClick={handleSubmit}
+                    disabled={!isAssessmentValid}
+                    className={`w-full py-3 mt-6 rounded-md transition-colors ${
+                      isAssessmentValid
+                        ? 'bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer'
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    }`}
+                  >
+                    Submit Assessment
+                  </button>
+                </>
+              )}
             </div>
           )}
         </div>
@@ -157,4 +196,4 @@ const Assessment = () => {
   );
 };
 
-export default Assessment;
+export default AssessmentPage;

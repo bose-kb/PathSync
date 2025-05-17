@@ -108,7 +108,7 @@ const ChatWithUs: React.FC = () => {
       <button
         id="openChatButton"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="rounded-full shadow-lg cursor-pointer bg-[#4bc6aa]"
+        className="bg-blue-600 text-black px-4 py-2 rounded-lg shadow-lg"
       >
         <img
         src="/assets/chat.png"
@@ -179,7 +179,7 @@ const ChatWithUs: React.FC = () => {
 <button
   id="sendMessageBtn"
   onClick={handleSend}
-  className={`ml-2 bg-[#4bc6aa] text-white px-3 py-2 rounded cursor-pointer ${
+  className={`ml-2 bg-blue-600 text-black px-3 py-2 rounded ${
     isSending || !config ? "opacity-50 cursor-not-allowed" : ""
   }`}
   disabled={isSending || !config}
