@@ -1,27 +1,28 @@
-import axiosInstance from './api'; // Import the pre-configured Axios instance
+// src/services/assessmentApi.ts
+import axios from 'axios';
+import axiosInstance from './api';
 
-/**
- * Fetch the assessment from the backend.
- */
-export async function getAssessment() {
+// Replace this with your actual token fetching logic
+const getToken = () => localStorage.getItem('token');
+
+
+
+export async function generateAssessment() {
   try {
-    const response = await axiosInstance.post('/assessments/generate'); // Use `POST` method for `/assessments/generate`
-    return response.data; // Extract and return the data from the response
+    const response = await axiosInstance.post('/assessments/generate');
+    return response.data;
   } catch (error: any) {
-    console.error('Error fetching assessment:', error);
-    throw new Error(error?.response?.data?.message || 'Failed to fetch assessment.');
+    console.error('Error generating assessment:', error.response?.data || error.message);
+    throw error;
   }
 }
 
-/**
- * Submit the completed assessment to the backend.
- */
+export async function startAssessment(assessmentId: string) {
+  const response = await axiosInstance.post(`/assessments/${assessmentId}/start`);
+  return response.data;
+}
+
 export async function submitAssessment(assessmentId: string, answers: Record<string, string>) {
-  try {
-    const response = await axiosInstance.post(`/assessments/${assessmentId}/complete`, { answers }); // Use `POST` method with the payload
-    return response.data; // Extract and return the data from the response
-  } catch (error: any) {
-    console.error('Error submitting assessment:', error);
-    throw new Error(error?.response?.data?.message || 'Failed to submit assessment.');
-  }
+  const response = await axiosInstance.post(`/assessments/${assessmentId}/complete`, { answers });
+  return response.data;
 }

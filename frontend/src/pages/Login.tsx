@@ -29,6 +29,8 @@ const Login: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    localStorage.clear();
+
     e.preventDefault();
 
     // Clear previous errors and mark form as submitted
