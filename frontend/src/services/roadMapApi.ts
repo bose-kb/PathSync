@@ -20,9 +20,9 @@ const roadMapApi = {
    * @param {Object} questionOutcomes - The assessment results
    * @returns {Promise} Promise object representing the API response
    */
-  createLearningPath: (questionOutcomes) => {
-    console.log(questionOutcomes);
-    return axiosInstance.get('/learn-path/create', questionOutcomes );
+  createLearningPath: (questionResults) => {
+    console.log(questionResults);
+    return axiosInstance.post('/learn-path/create', questionResults );
   },
   
   /**
