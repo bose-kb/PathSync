@@ -12,6 +12,7 @@ const LoggedInHome: React.FC = () => {
     // Handle user logout, e.g., clear tokens, reset state
     // Redirect to the home page
     navigate("/");
+    localStorage.clear();
   };
 
   return (
