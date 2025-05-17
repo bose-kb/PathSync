@@ -57,7 +57,7 @@ public class LearningPathController {
      * @param questionOutcomes The assessment summary containing question results.
      * @return A response entity with the created custom learning path.
      */
-    @GetMapping("/create")
+    @PostMapping("/create")
     public ResponseEntity<CustomLearningPath> createCustomLearningPath(Authentication authentication,
                                                                        @RequestBody Map<String, Map<String, String>> questionOutcomes) throws UserNotFoundException, QuestionNotFoundException, SurveyNotCompleteException, LearnPathAlreadyExistsException {
         learningPathService.checkCustomLearnPathAlreadyExists(authentication.getName());
@@ -69,12 +69,11 @@ public class LearningPathController {
     /**
      * Endpoint to start a learning path for a user.
      *
-     * @param userEmail       The user's email.
      * @return A response entity indicating success.
      */
     @PostMapping("/start")
-    public ResponseEntity<Void> startLearningPath(@RequestParam String userEmail) {
-        learningPathService.startLearningPath(userEmail);
+    public ResponseEntity<Void> startLearningPath(Authentication authentication) {
+        learningPathService.startLearningPath(authentication.getName());
         return ResponseEntity.ok().build();
     }
 }

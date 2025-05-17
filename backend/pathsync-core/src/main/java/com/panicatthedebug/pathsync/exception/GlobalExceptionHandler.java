@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.Arrays;
 import java.util.Map;
 
 @RestControllerAdvice
@@ -39,6 +40,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             LearnPathAlreadyExistsException.class
     })
     public ResponseEntity<Object> handleBadRequest(Exception e, WebRequest webRequest) {
+        System.out.println(e.getMessage());
         return handleExceptionInternal(e, Map.of(MESSAGE, e.getMessage()),
                 new HttpHeaders(),
                 HttpStatus.BAD_REQUEST,
@@ -75,6 +77,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             Exception.class,
     })
     public ResponseEntity<Object> handleServerError(Exception e, WebRequest webRequest) {
+        System.out.println(e.getMessage());
+        System.out.println(Arrays.toString(e.getStackTrace()));
         return handleExceptionInternal(e, Map.of(MESSAGE, "An unknown error occurred"),
                 new HttpHeaders(),
                 HttpStatus.INTERNAL_SERVER_ERROR,
