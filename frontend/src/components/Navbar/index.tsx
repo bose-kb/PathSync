@@ -1,12 +1,20 @@
 import React from "react";
 import Button from "../Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const Navbar: React.FC<{ isLoggedIn?: boolean; onLogout?: () => void }> = ({ isLoggedIn = false, onLogout }) => {
+const Navbar: React.FC<{ isLoggedIn?: boolean }> = ({ isLoggedIn = false }) => {
+  const navigate = useNavigate(); // Access the routing mechanism
+
+  const handleLogout = () => {
+    // Clear localStorage and redirect the user
+    localStorage.clear();
+    navigate("/"); // Redirect to the home page
+  };
+
   return (
-    <nav className="flex justify-between items-center py-4 px-6 md:px-12 bg-white">
+    <nav className="flex justify-between items-center py-4 px-6 md:px-12 bg-[#FAEDCA] border-b-2">
       {/* Logo */}
-      <div className="text-2xl font-bold text-gray-800">PathSync</div>
+      <Link to="/home"><div className="text-2xl font-bold text-gray-800">PathSync</div></Link>
 
       {/* Links for both logged-in and guest users */}
       <div className="flex-1 flex justify-center">
@@ -16,8 +24,8 @@ const Navbar: React.FC<{ isLoggedIn?: boolean; onLogout?: () => void }> = ({ isL
             <Link to="/roadmap" className="text-gray-600 hover:text-gray-900">
               Roadmap
             </Link>
-            <Link to="/progress" className="text-gray-600 hover:text-gray-900">
-              Progress
+            <Link to="/dashboard" className="text-gray-600 hover:text-gray-900">
+              Dashboard
             </Link>
           </div>
         ) : (
@@ -42,8 +50,8 @@ const Navbar: React.FC<{ isLoggedIn?: boolean; onLogout?: () => void }> = ({ isL
       {/* Logout for logged-in users */}
       {isLoggedIn ? (
         <button
-          onClick={onLogout}
-          className="text-gray-600 hover:text-gray-900 px-4 py-1 border border-red-500 rounded cursor-pointer"
+          onClick={handleLogout} // Invoke the logout logic here
+          className="text-gray-600 hover:text-gray-900 px-4 py-1 border border-red-500 rounded cursor-pointer bg-white"
         >
           Logout
         </button>

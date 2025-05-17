@@ -29,6 +29,7 @@ const roadMapApi = {
    * @param {string} completionStatus - The new completion status ('completed' or 'not started')
    * @returns {Promise} Promise object representing the API response
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   updateCompletionStatus: (topic: any, subTopic: any, completionStatus: any) => {
     return axiosInstance.post('/learn-path/update-status', {
       topic,
