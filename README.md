@@ -79,7 +79,6 @@ Your learning path evolves as you grow:
  
 ### Frontend
 - **Framework**: React with TypeScript
-- **State Management**: Redux
 - **Styling**: Tailwind CSS
 - **UI Components**: Material-UI
 - **RoadMap Components**: React Flow for visualizing learning paths
@@ -124,7 +123,7 @@ PathSync is built on a microservices architecture, ensuring scalability and main
 <summary>Assessment Flow (Click to view)</summary>
 &nbsp;
  
-![Assessment Flow](./docs/images/assessment-flow.png)
+![Assessment Flow](./docs/assets/images/assessment-flow.png)
 *Detailed flow of the skill assessment process*
  
 </details>
