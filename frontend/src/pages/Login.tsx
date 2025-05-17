@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import AuthBackground from "../components/AuthBackground";
 import AuthButton from "../components/AuthButton";
-import { Input } from "../components/Input"; // Updated Input component
+import { Input } from "../components/Input";
 import axiosInstance from "../services/api";
-import Toast from "../components/Toast"; // Import Toast component
+import Toast from "../components/Toast";
+import Popup from "../components/Popup"; // Import Popup Component
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -13,11 +14,14 @@ const Login: React.FC = () => {
 
   // Manage errors for input fields
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
-  const [formSubmitted, setFormSubmitted] = useState(false); // Tracks form submission state
-  const [toast, setToast] = useState<{ message: string; status: 'success' | 'error' | null }>({
-    message: '',
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [toast, setToast] = useState<{ message: string; status: "success" | "error" | null }>({
+    message: "",
     status: null,
-  }); // Tracks toast messages and status
+  });
+
+  // Added popup state to trigger visibility
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
 
   const handleInputChange = (field: keyof typeof formData, value: string) => {
     setFormData({ ...formData, [field]: value });
@@ -25,6 +29,8 @@ const Login: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    localStorage.clear();
+
     e.preventDefault();
 
     // Clear previous errors and mark form as submitted
@@ -46,62 +52,30 @@ const Login: React.FC = () => {
 
       console.log("Login successful:", response.data);
 
-      // Redirect to /survey after toast
-      setTimeout(() => {
-        window.location.href = "/survey";
-      }, 2000);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // Show popup instead of immediate redirection
+      setIsPopupVisible(true);
     } catch (error: any) {
       console.error("Login failed:", error);
 
       // Backend-specific error handling
-      if (error.response?.data?.message) {
-        let errorMessage = "";
-        switch (error.response.data.message) {
-          case "User not found":
-            errorMessage = "User does not exist."; // Display error for the email field
-            setErrors({
-              email: "User does not exist.",
-              password: "",
-            });
-            break;
-          case "Unauthorized request. Please verify credentials and try again.":
-            errorMessage = "Invalid credentials.";
-            setErrors({
-              email: "Invalid credentials.",
-              password: "Invalid credentials.",
-            });
-            break;
-          default:
-            errorMessage = "Unexpected error. Please try again.";
-            setErrors({
-              email: "Unexpected error. Please try again.",
-              password: "Unexpected error. Please try again.",
-            });
-        }
+      const errorMessage = error.response?.data?.message || "An unexpected error occurred.";
+      setErrors({
+        email: errorMessage,
+        password: errorMessage,
+      });
 
-        // Show error toast
-        setToast({ message: errorMessage, status: "error" });
-      } else {
-        setErrors({
-          email: "An unexpected error occurred.",
-          password: "An unexpected error occurred.",
-        });
-
-        // Show general error toast
-        setToast({ message: "An unexpected error occurred. Please try again.", status: "error" });
-      }
+      setToast({ message: errorMessage, status: "error" });
     }
   };
 
   return (
     <div className="flex min-h-screen">
-      {/* Left side - colorful background */}
+      {/* Left side remains unchanged */}
       <div className="hidden md:block md:w-1/2">
         <AuthBackground />
       </div>
 
-      {/* Right side - Login form and Toast */}
+      {/* Right side remains unchanged */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
           {/* Toast Component */}
@@ -109,14 +83,16 @@ const Login: React.FC = () => {
             <Toast
               message={toast.message}
               status={toast.status}
-              onClose={() => setToast({ message: '', status: null })}
+              onClose={() => setToast({ message: "", status: null })}
             />
           )}
 
+          {/* Logo -- Keeps the existing design */}
           <div className="flex justify-end mb-4">
             <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
           </div>
 
+          {/* Title and Form */}
           <h1 className="text-3xl font-bold mb-4">Log in</h1>
 
           <form onSubmit={handleSubmit}>
@@ -162,6 +138,9 @@ const Login: React.FC = () => {
           </form>
         </div>
       </div>
+
+      {/* Popup Component shown after successful login */}
+      {isPopupVisible && <Popup onClose={() => setIsPopupVisible(false)} />}
     </div>
   );
 };
