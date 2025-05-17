@@ -9,6 +9,7 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import roadMapApi from '../../services/roadMapApi'; // Import the roadMapApi service
 import Navbar from '../Navbar';
+import ChatWithUs from '../ChatBot/ChatWithUs';
 
 const RoadmapFlow = () => {
   const [learningPath, setLearningPath] = useState(null);
@@ -122,12 +123,12 @@ const RoadmapFlow = () => {
             </li>
           ))}
         </ul>
-        <button
+        {/* <button
           onClick={() => markAsCompleted(parentNodeId, title)}
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
           Mark as Completed
-        </button>
+        </button> */}
       </div>
     );
 
@@ -264,6 +265,7 @@ const RoadmapFlow = () => {
         <Controls />
         <Background gap={12} size={1} />
       </ReactFlow>
+      <ChatWithUs />
     </div>
   );
 };
